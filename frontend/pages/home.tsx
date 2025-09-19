@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 import { GetServerSideProps } from "next";
 import ConnectPage from "./connect"; // ✅ import ConnectPage
 
+
 const Home = () => {
   const router = useRouter();
 

@@ -1,0 +1,35 @@
+// Backend/src/auth/youtube.strategy.ts
+
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy, Profile } from 'passport-youtube-v3';
+import { ConfigService } from '@nestjs/config';
+
+@Injectable()
+export class YoutubeStrategy extends PassportStrategy(Strategy, 'youtube') {
+  constructor(private configService: ConfigService) {
+    super({
+      clientID: configService.get<string>('YOUTUBE_CLIENT_ID'),
+      clientSecret: configService.get<string>('YOUTUBE_CLIENT_SECRET'),
+      callbackURL: 'http://localhost:4000/auth/youtube/callback',
+      scope: ['https://www.googleapis.com/auth/youtube.readonly'], // Request read-only access
+    });
+  }
+
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: Profile,
+    done: (err: any, user: any, info?: any) => void,
+  ): Promise<any> {
+    // In this strategy, we are not creating a user or storing tokens in the DB.
+    // We are simply validating the user and passing the tokens along.
+    const user = {
+      youtubeId: profile.id,
+      displayName: profile.displayName,
+      accessToken, // Pass the tokens to the request object
+      refreshToken,
+    };
+    done(null, user);
+  }
+}

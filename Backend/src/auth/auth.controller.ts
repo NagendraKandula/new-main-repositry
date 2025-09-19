@@ -59,4 +59,32 @@ export class AuthController {
   Logout(@Res({ passthrough: true }) res: Response) {
     return this.authService.Logout(res);
   }
+  @Get('youtube')
+  @UseGuards(AuthGuard('youtube'))
+  async youtubeAuth(@Req() req) {
+    // This route is never hit directly because the guard redirects to YouTube
+  }
+
+  @Get('youtube/callback')
+  @UseGuards(AuthGuard('youtube'))
+  youtubeAuthRedirect(@Req() req, @Res() res: Response) {
+    // The 'user' object is attached by the YoutubeStrategy's validate function
+    const { accessToken, refreshToken } = req.user;
+
+    // Set tokens in HTTP-only cookies
+    res.cookie('youtube_access_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
+      sameSite: 'lax',
+    });
+
+    res.cookie('youtube_refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'lax',
+    });
+
+    // Redirect back to the frontend
+    res.redirect('http://localhost:3000/home'); // Or any other page
+  }
 }
