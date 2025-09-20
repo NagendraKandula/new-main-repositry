@@ -12,7 +12,6 @@ import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -21,6 +20,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+    
   private async signToken(userId: number, email: string): Promise<string> {
     const payload = { sub: userId, email };
     return this.jwtService.signAsync(payload, { expiresIn: '60m' });

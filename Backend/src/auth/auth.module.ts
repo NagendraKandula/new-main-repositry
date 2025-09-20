@@ -7,7 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
 import { GoogleStrategy } from './google.strategy'; // <-- Import GoogleStrategy
-import { YoutubeStrategy } from './youtube.strategy'; // <-- Import YoutubeStrategy
+import { YoutubeStrategy } from './youtube.strategy';
+import { YoutubeModule } from './youtube/youtube.module'; // <-- Import YoutubeStrategy
 
 @Module({
   imports: [

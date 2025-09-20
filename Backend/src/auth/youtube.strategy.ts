@@ -12,7 +12,12 @@ export class YoutubeStrategy extends PassportStrategy(Strategy, 'youtube') {
       clientID: configService.get<string>('YOUTUBE_CLIENT_ID'),
       clientSecret: configService.get<string>('YOUTUBE_CLIENT_SECRET'),
       callbackURL: 'http://localhost:4000/auth/youtube/callback',
-      scope: ['https://www.googleapis.com/auth/youtube.readonly'], // Request read-only access
+      scope: ['https://www.googleapis.com/auth/youtube.readonly',
+              'https://www.googleapis.com/auth/youtube.upload'
+
+      ],
+      prompt: 'consent',
+      accessType:'offline' // Request read-only access
     });
   }
 

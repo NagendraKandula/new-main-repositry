@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import styles from "../styles/Home.module.css";
 import { GetServerSideProps } from "next";
 import ConnectPage from "./connect"; // ✅ import ConnectPage
+import UploadPage from "./upload"; // ✅ Import UploadPage
+
 
 
 const Home = () => {
@@ -33,13 +35,14 @@ const Home = () => {
         <h1 className={styles.logo}>Welcome to your Dashboard!</h1>
         <button onClick={handleLogout} className={styles.logoutButton}>
           Logout
-
+          
         </button>
       </header>
 
       {/* ✅ Main content */}
       <main className={styles.main}>
         <ConnectPage />
+         <UploadPage /> 
       </main>
     </div>
   );

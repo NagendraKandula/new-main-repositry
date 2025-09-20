@@ -87,4 +87,5 @@ export class AuthController {
     // Redirect back to the frontend
     res.redirect('http://localhost:3000/home'); // Or any other page
   }
+  
 }
