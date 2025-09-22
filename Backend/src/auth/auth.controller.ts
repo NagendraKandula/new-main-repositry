@@ -87,5 +87,16 @@ export class AuthController {
     // Redirect back to the frontend
     res.redirect('http://localhost:3000/home'); // Or any other page
   }
-  
+  @Get('facebook')
+  @UseGuards(AuthGuard('facebook'))
+  async facebookAuth(@Req() req) {
+    // Initiates the Facebook OAuth2 login flow
+  }
+  @Get('facebook/callback')
+  @UseGuards(AuthGuard('facebook'))
+  facebookAuthRedirect(@Req() req, @Res({ passthrough: true }) res: Response) {
+    // You can create a new service method for this or reuse the googleLogin logic
+    return this.authService.facebookLogin(req, res);
+  }
+
 }

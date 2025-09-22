@@ -60,7 +60,7 @@ export class AuthService {
     // Redirect back to the frontend home page
         return res.redirect('http://localhost:3000/home');
   }
-  
+
   // REGISTER
   async register(dto: RegisterDto, res: Response) {
     const { fullName, email, password, confirmPassword } = dto;
@@ -193,4 +193,31 @@ export class AuthService {
     res.clearCookie('access_token' , { path: '/' });
     return {message : 'Logged out sucessfully'}
   }
+
+ async facebookLogin(req, res: Response) {
+    if (!req.user) {
+      throw new BadRequestException('No user from facebook');
+    }
+
+    const { accessToken, refreshToken } = req.user;
+
+    res.cookie('facebook_access_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'lax',
+    });
+
+    if (refreshToken) {
+      res.cookie('facebook_refresh_token', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: 'lax',
+      });
+    }
+
+    return res.redirect('http://localhost:3000/connect');
+  }
+
+
+
 }

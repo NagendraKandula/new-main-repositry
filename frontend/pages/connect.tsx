@@ -5,7 +5,7 @@ import styles from "../styles/connect.module.css";
 const ConnectPage = () => {
   // State to track if YouTube is connected
   const [isYouTubeConnected, setIsYouTubeConnected] = useState(false);
-
+  const [isFacebookConnected, setIsFacebookConnected] = useState(false); 
   // Why is this needed?
   // We use useEffect to check for the YouTube access token cookie when the component
   // first loads. This allows us to show "Connected" if the user has already
@@ -15,6 +15,10 @@ const ConnectPage = () => {
     if (document.cookie.includes('youtube_access_token=')) {
       setIsYouTubeConnected(true);
     }
+    if (document.cookie.includes('facebook_access_token=')) {
+      setIsFacebookConnected(true);
+    }
+
   }, []); // The empty dependency array ensures this runs only once on mount
 
   const platforms = [
@@ -28,7 +32,7 @@ const ConnectPage = () => {
       name: "Facebook",
       connected: false,
       icon: <FaFacebook className={styles.icon} />,
-      url: "https://www.facebook.com/login/",
+      url: "http://localhost:4000/auth/facebook",
     },
     {
       name: "LinkedIn",
@@ -64,7 +68,7 @@ const ConnectPage = () => {
   // `window.open` would break the OAuth flow, as the backend needs to redirect the
   // original tab back to your application after authentication.
   const handleConnect = (url: string, platformName: string) => {
-    if (platformName === "YouTube") {
+    if (platformName === "YouTube" || platformName === "Facebook") {
       // --- CHANGE 2: Redirect the current page for the OAuth flow ---
       window.location.href = url;
     } else {

@@ -8,7 +8,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
 import { GoogleStrategy } from './google.strategy'; // <-- Import GoogleStrategy
 import { YoutubeStrategy } from './youtube.strategy';
-import { YoutubeModule } from './youtube/youtube.module'; // <-- Import YoutubeStrategy
+import { YoutubeModule } from './youtube/youtube.module'; 
+import { FacebookStrategy } from './facebook.strategy';// <-- Import YoutubeStrategy
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { YoutubeModule } from './youtube/youtube.module'; // <-- Import YoutubeS
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, GoogleStrategy,YoutubeStrategy], // <-- Add GoogleStrategy
+  providers: [AuthService, JwtStrategy, GoogleStrategy,YoutubeStrategy,FacebookStrategy], // <-- Add GoogleStrategy
   exports: [AuthService, JwtModule], 
 })
 export class AuthModule {}
