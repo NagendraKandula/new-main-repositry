@@ -215,7 +215,7 @@ export class AuthService {
       });
     }
 
-    return res.redirect('http://localhost:3000/connect');
+    return res.redirect('http://localhost:3000/home');
   }
 
 
