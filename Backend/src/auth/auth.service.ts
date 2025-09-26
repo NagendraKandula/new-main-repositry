@@ -215,8 +215,24 @@ export class AuthService {
       });
     }
 
-    return res.redirect('http://localhost:3000/home');
+    return res.redirect('http://localhost:3000/facebook-post');
   }
+
+ async linkedinLogin(req, res: Response) {
+    if (!req.user) {
+      throw new BadRequestException('No user from linkedin');
+    } 
+    const { accessToken, refreshToken } = req.user;
+
+    res.cookie('linkedin_access_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'lax',
+    });
+  
+   return res.redirect('http://localhost:3000/home');
+}
+
 
 
 

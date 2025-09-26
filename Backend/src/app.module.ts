@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { YoutubeModule } from './auth/youtube/youtube.module';
+import { FacebookModule } from './facebook/facebook.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { YoutubeModule } from './auth/youtube/youtube.module';
     PrismaModule,
     AuthModule,
     YoutubeModule,
+    FacebookModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, PrismaService],

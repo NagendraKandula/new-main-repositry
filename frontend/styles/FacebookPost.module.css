@@ -1,0 +1,92 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  font-family: Arial, sans-serif;
+}
+
+.formWrapper {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  color: #1877f2;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #606770;
+  margin-bottom: 30px;
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #dddfe2;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  resize: vertical;
+}
+
+.fileLabel {
+  display: block;
+  background-color: #e7f3ff;
+  color: #1877f2;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.fileLabel:hover {
+  background-color: #d1eaff;
+}
+
+.fileInput {
+  display: none;
+}
+
+.button {
+  width: 100%;
+  padding: 12px;
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #166fe5;
+}
+
+.button:disabled {
+  background-color: #a0bdf5;
+  cursor: not-allowed;
+}
+
+.successMessage {
+  color: green;
+  margin-top: 20px;
+}
+
+.errorMessage {
+  color: red;
+  margin-top: 20px;
+}

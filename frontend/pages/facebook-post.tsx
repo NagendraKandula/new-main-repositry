@@ -1,0 +1,98 @@
+import { useState, ChangeEvent, FormEvent } from 'react';
+import axios from 'axios';
+import styles from '../styles/FacebookPost.module.css';
+import { GetServerSideProps } from 'next';
+import { withAuth } from '../utils/withAuth';
+
+const FacebookPostPage = () => {
+  const [content, setContent] = useState('');
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setMediaFile(e.target.files[0]);
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!mediaFile) {
+      setError('Please select an image or video to upload.');
+      return;
+    }
+
+    setIsLoading(true);
+    setMessage('');
+    setError('');
+
+    const formData = new FormData();
+    formData.append('content', content);
+    formData.append('media', mediaFile);
+
+    try {
+      const response = await axios.post(
+        'http://localhost:4000/facebook/post',
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+      setMessage(response.data.message || 'Successfully posted to Facebook!');
+      setContent('');
+      setMediaFile(null);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'An error occurred while posting.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.formWrapper}>
+        <h1 className={styles.title}>Create a Facebook Post</h1>
+        <p className={styles.subtitle}>Post a photo or video to your Facebook Page</p>
+        <form onSubmit={handleSubmit}>
+          <textarea
+            className={styles.textarea}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="What's on your mind?"
+            rows={5}
+            disabled={isLoading}
+          />
+          <label className={styles.fileLabel}>
+            {mediaFile ? `Selected: ${mediaFile.name}` : 'Select Image or Video'}
+            <input
+              type="file"
+              accept="image/*,video/*"
+              // CORRECTED LINE
+              onChange={handleFileChange}
+              className={styles.fileInput}
+              disabled={isLoading}
+            />
+          </label>
+          <button type="submit" className={styles.button} disabled={isLoading}>
+            {isLoading ? 'Posting...' : 'Post to Facebook'}
+          </button>
+        </form>
+        {message && <p className={styles.successMessage}>{message}</p>}
+        {error && <p className={styles.errorMessage}>{error}</p>}
+      </div>
+    </div>
+  );
+};
+
+export default FacebookPostPage;
+
+export const getServerSideProps: GetServerSideProps = withAuth(async (context) => {
+  return {
+    props: {},
+  };
+});
