@@ -98,5 +98,4 @@ export class AuthController {
     // You can create a new service method for this or reuse the googleLogin logic
     return this.authService.facebookLogin(req, res);
   }
-
 }
