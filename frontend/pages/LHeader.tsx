@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { SiThreads } from "react-icons/si";
 import { useRouter } from "next/router";
+import apiClient from "../lib/axios"; // ✅ Import the apiClient
 
 interface LHeaderProps {
   setActivePlatform: (platform: string | null) => void;
@@ -21,18 +22,13 @@ const LHeader: React.FC<LHeaderProps> = ({ setActivePlatform }) => {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch("http://localhost:4000/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (res.ok) {
-        router.push("/login");
-      } else {
-        console.error("Logout failed");
-      }
+      // ✅ Use apiClient to send the logout request
+      await apiClient.post("/auth/logout");
+      // On success, redirect to the login page
+      router.push("/login");
     } catch (error) {
       console.error("An error occurred during logout:", error);
+      // Optionally, show a message to the user
     }
   };
 
