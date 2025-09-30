@@ -17,8 +17,8 @@ export class LinkedinStrategy {
 
   @Get()
   initiateLogin(@Res() res: Response) {
-    const clientId = this.configService.get<string>('LINKEDIN_CLIENT_ID');
-    const redirectUri = 'http://localhost:4000/auth/linkedin/callback';
+    const clientId = this.configService.get<string>('LINKEDIN_CLIENT_ID')!;
+    const redirectUri = this.configService.get<string>('LINKEDIN_REDIRECT_URI')!;
 
     // ✅ Use OIDC-style scopes
     const scope = 'openid profile email w_member_social';
@@ -33,9 +33,9 @@ export class LinkedinStrategy {
   @Get('callback')
 async handleCallback(@Req() req: Request, @Res() res: Response) {
   const code = req.query.code as string;
-
+  const frontendUrl = this.configService.get<string>('FRONTEND_URL')!;
   if (!code) {
-    return res.redirect('http://localhost:3000/login?error=linkedin_denied');
+    return res.redirect(`${frontendUrl}/login?error=linkedin_denied`);
   }
 
   try {
@@ -68,12 +68,12 @@ async handleCallback(@Req() req: Request, @Res() res: Response) {
       sameSite: 'lax',
     });
 
-
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL')!;
     // Redirect user to frontend
-    return res.redirect('http://localhost:3000/Landing');
+    return res.redirect(`${frontendUrl}/Landing`);
   } catch (error: any) {
     console.error('LinkedIn authentication failed:', error.message);
-    return res.redirect('http://localhost:3000/login?error=linkedin_failed');
+    return res.redirect(`${frontendUrl}/login?error=linkedin_failed`);
   }
 }
 
@@ -90,7 +90,7 @@ async handleCallback(@Req() req: Request, @Res() res: Response) {
     const requestBody = new URLSearchParams({
       grant_type: 'authorization_code',
       code,
-      redirect_uri: 'http://localhost:4000/auth/linkedin/callback',
+      redirect_uri: this.configService.get<string>('LINKEDIN_REDIRECT_URI')!,
       client_id: clientId,
       client_secret: clientSecret,
     }).toString();

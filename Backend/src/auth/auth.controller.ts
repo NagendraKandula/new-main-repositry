@@ -8,10 +8,13 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config'; 
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
 
   @Post('register')
   register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
@@ -84,8 +87,8 @@ export class AuthController {
       sameSite: 'lax',
     });
 
-    // Redirect back to the frontend
-    res.redirect('http://localhost:3000/Landing?youtube=connected'); // Or any other page
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+    res.redirect(`${frontendUrl}/Landing?youtube=connected`); // Or any other page
   }
   @Get('facebook')
   @UseGuards(AuthGuard('facebook'))

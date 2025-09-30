@@ -22,7 +22,7 @@ export class YoutubeService {
     const oauth2Client = new google.auth.OAuth2(
       this.config.get<string>('YOUTUBE_CLIENT_ID'),
       this.config.get<string>('YOUTUBE_CLIENT_SECRET'),
-      'http://localhost:4000/auth/youtube/callback',
+      this.config.get<string>('YOUTUBE_REDIRECT_URI'),
     );
 
     oauth2Client.setCredentials({

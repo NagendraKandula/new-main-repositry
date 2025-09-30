@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styles from "../styles/login.module.css";
+import apiClient from '../lib/axios';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -17,25 +18,17 @@ export default function LoginPage() {
     setMessage('');
 
     try {
-      const response = await fetch('http://localhost:4000/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-        // This line is crucial for sending and receiving cookies
-        credentials: 'include', 
+      const response = await apiClient.post('/auth/login', {
+        email,
+        password,
       });
 
-      const data = await response.json();
+      setMessage(response.data.message || 'Login successful');
+      router.push('/Landing');
 
-      if (response.ok) {
-        setMessage(data.message || 'Login successful');
-        // Redirect to home page on success
-        router.push('/Landing');
-      } else {
-        throw new Error(data.message || 'Login failed');
-      }
     } catch (error: any) {
-      setMessage(error.message);
+      const errorMessage = error.response?.data?.message || 'Login failed';
+      setMessage(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -127,7 +120,7 @@ export default function LoginPage() {
               <span className={styles.dividerLine}></span>
             </div>
 
-            <a href="http://localhost:4000/auth/google" className={`${styles.button} ${styles.googleButton}`}>
+            <a href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`} className={`${styles.button} ${styles.googleButton}`}>
               <svg className={styles.googleIcon} width="20" height="20" viewBox="0 0 24 24" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
                   <g>
                       <path d="M21.35 11.1h-9.17v2.82h5.63c-.24 1.41-1.28 2.61-2.75 3.12l.02.13 3.28 2.54.23.02c2.08-1.92 3.28-4.76 3.28-8.01 0-.56-.06-1.09-.15-1.62z" fill="#4285F4"></path>
@@ -136,7 +129,7 @@ export default function LoginPage() {
                       <path d="M12.18 6.89c2.14 0 3.58.92 4.41 1.7l3.23-3.15C18.55 3.84 15.89 2.5 12.18 2.5c-4.07 0-7.57 2.02-9.32 5.04l3.82 2.51c.75-2.28 2.88-4.16 5.5-4.16z" fill="#EA4335"></path>
                   </g>
               </svg>
-              <span>Contiune with Google</span>
+              <span>Continue with Google</span>
             </a>
 
             <p className={styles.signupLink}>

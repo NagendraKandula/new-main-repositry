@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import axios from "axios";
-import { useRouter } from "next/router"; // for navigation
+import { useRouter } from "next/router";
 import styles from "../styles/Register.module.css";
+import apiClient from "../lib/axios"; // ✅ Import the centralized apiClient
 
 export default function SignupPage() {
   const router = useRouter();
@@ -68,7 +68,8 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:4000/auth/register", {
+      // ✅ CHANGED: Using apiClient with a relative path
+      const response = await apiClient.post("/auth/register", {
         fullName: username,
         email,
         password,
@@ -81,7 +82,6 @@ export default function SignupPage() {
       setPassword("");
       setConfirmPassword("");
 
-      // ✅ Redirect to Landing page
       router.push("/Landing");
     } catch (err: any) {
       const serverError = err.response?.data?.message;
@@ -275,9 +275,9 @@ export default function SignupPage() {
               <span className={styles.dividerLine}></span>
             </div>
 
-            {/* Google Auth Button */}
+            {/* ✅ CHANGED: Google Auth Button now uses environment variable */}
             <a
-              href="http://localhost:4000/auth/google"
+              href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`}
               className={styles.googleButton}
             >
               <svg

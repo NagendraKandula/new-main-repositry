@@ -8,10 +8,12 @@ const FacebookConnect = () => {
   const handleConnectFacebook = () => {
     setLoading(true);
     try {
-      // Redirect to backend OAuth route
-      // Add a redirect query param to return to Landing page with "facebook=connected"
-      const redirectUri = encodeURIComponent("http://localhost:3000/Landing?facebook=connected");
-      window.location.href = `http://localhost:4000/auth/facebook?redirect=${redirectUri}`;
+       const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL;
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      
+      // Construct the final URL dynamically
+      const redirectUri = encodeURIComponent(`${frontendUrl}/Landing?facebook=connected`);
+      window.location.href = `${backendUrl}/auth/facebook?redirect=${redirectUri}`;
     } catch (error) {
       console.error("Connection error:", error);
       alert("Unable to connect to Facebook. Please try again later.");

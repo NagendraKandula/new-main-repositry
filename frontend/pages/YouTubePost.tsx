@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import styles from "../styles/YouTubePost.module.css";
 import { FaYoutube, FaUpload, FaPlus, FaSmile, FaHashtag, FaMagic, FaTimes } from "react-icons/fa";
-import axios from "axios";
+import apiClient from "../lib/axios";
 import { withAuth } from "../utils/withAuth";
 import { GetServerSideProps } from "next";
 
@@ -67,8 +67,8 @@ const YouTubePost = () => {
     formData.append("schedule", postTime);
 
     try {
-      const response = await axios.post(
-        "http://localhost:4000/youtube/upload-video",
+      const response = await apiClient.post(
+        "/youtube/upload-video",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../lib/axios'; // ✅ Import the centralized apiClient
 import styles from '../styles/ForgotPassword.module.css';
 import Link from 'next/link';
+import { useRouter } from 'next/router'; // Import useRouter
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail]       = useState('');
-  const [otp, setOtp]           = useState('');
+  const [email, setEmail] = useState('');
+  const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage]   = useState('');
-  const [error, setError]       = useState('');
-  const [loading, setLoading]   = useState(false);
-  const [step, setStep]         = useState(1);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState(1);
+  const router = useRouter(); // Initialize router
 
   // --- Resend OTP Logic ---
   const [resendTimer, setResendTimer] = useState(60);
-  const [canResend, setCanResend]     = useState(false);
+  const [canResend, setCanResend] = useState(false);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -33,7 +35,8 @@ export default function ForgotPasswordPage() {
     setError('');
     setMessage('');
     try {
-      await axios.post('http://localhost:4000/auth/resend-otp', { email });
+      // ✅ CHANGED: Use apiClient
+      await apiClient.post('/auth/resend-otp', { email });
       setMessage('A new OTP has been sent.');
       setCanResend(false);
       setResendTimer(60); // Reset timer
@@ -53,7 +56,6 @@ export default function ForgotPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-
   useEffect(() => {
     if (newPassword.length > 0) {
       validatePassword(newPassword);
@@ -62,10 +64,10 @@ export default function ForgotPasswordPage() {
 
   const validatePassword = (value: string) => {
     const minLength = value.length >= 8;
-    const hasUpper  = /[A-Z]/.test(value);
-    const hasLower  = /[a-z]/.test(value);
+    const hasUpper = /[A-Z]/.test(value);
+    const hasLower = /[a-z]/.test(value);
     const hasNumber = /\d/.test(value);
-    const hasSpecial= /[!@#$%^&*(),.?":{}|<>]/.test(value);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(value);
 
     setPasswordValidation({ minLength, hasUpper, hasLower, hasNumber, hasSpecial });
     const score = [minLength, hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length;
@@ -75,14 +77,14 @@ export default function ForgotPasswordPage() {
     else setPasswordStrengthText("Strong");
   };
 
-
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setMessage('');
     try {
-      const response = await axios.post('http://localhost:4000/auth/forgot-password', { email });
+      // ✅ CHANGED: Use apiClient
+      const response = await apiClient.post('/auth/forgot-password', { email });
       setMessage(response.data.message);
       setStep(2);
     } catch (err: any) {
@@ -108,12 +110,13 @@ export default function ForgotPasswordPage() {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:4000/auth/reset-password', {
+      // ✅ CHANGED: Use apiClient
+      const response = await apiClient.post('/auth/reset-password', {
         email, otp, newPassword, confirmPassword,
       });
       setMessage(response.data.message);
       setTimeout(() => {
-        window.location.href = '/login';
+        router.push('/login'); // Use router for navigation
       }, 2000);
     } catch (err: any) {
       const serverError = err.response?.data?.message;
@@ -135,7 +138,6 @@ export default function ForgotPasswordPage() {
           <line x1="4" y1="20" x2="20" y2="4" stroke="#bcbcbc" strokeWidth="2" />
       </svg>
   );
-
 
   return (
     <div className={styles.pageGifBg}>

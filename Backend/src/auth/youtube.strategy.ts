@@ -11,7 +11,7 @@ export class YoutubeStrategy extends PassportStrategy(Strategy, 'youtube') {
     super({
       clientID: configService.get<string>('YOUTUBE_CLIENT_ID'),
       clientSecret: configService.get<string>('YOUTUBE_CLIENT_SECRET'),
-      callbackURL: 'http://localhost:4000/auth/youtube/callback',
+      callbackURL:  configService.get<string>('YOUTUBE_CALLBACK_URL'),
       scope: ['https://www.googleapis.com/auth/youtube.readonly',
               'https://www.googleapis.com/auth/youtube.upload'
 

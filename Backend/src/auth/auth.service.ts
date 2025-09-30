@@ -57,8 +57,8 @@ export class AuthService {
       expires: new Date(Date.now() + 1 * 60 * 60 * 1000),
     });
 
-    // Redirect back to the frontend home page
-        return res.redirect('http://localhost:3000/page');
+    const frontendUrl = this.config.get<string>('FRONTEND_URL');
+     return res.redirect(`${frontendUrl}/Landing`);
   }
 
   // REGISTER
@@ -214,8 +214,8 @@ export class AuthService {
         sameSite: 'lax',
       });
     }
-
-    return res.redirect('http://localhost:3000/Landing');
+     const frontendUrl = this.config.get<string>('FRONTEND_URL');
+     return res.redirect(`${frontendUrl}/Landing`);
   }
 
  

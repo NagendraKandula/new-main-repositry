@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import axios from 'axios';
+import apiClient from '../lib/axios';
 import styles from '../styles/FacebookPost.module.css';
 import { GetServerSideProps } from 'next';
 import { withAuth } from '../utils/withAuth';

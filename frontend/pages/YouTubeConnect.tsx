@@ -8,10 +8,13 @@ const YouTubeConnect = () => {
   const handleConnectYouTube = () => {
     setLoading(true);
     try {
+      const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL;
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       // Redirect to backend OAuth route
       // Add a redirect query param to return to Landing page with "youtube=connected"
-      const redirectUri = encodeURIComponent("http://localhost:3000/Landing?youtube=connected");
-      window.location.href = `http://localhost:4000/auth/youtube?redirect=${redirectUri}`;
+     const redirectUri = encodeURIComponent(`${frontendUrl}/Landing?youtube=connected`);
+      window.location.href = `${backendUrl}/auth/youtube?redirect=${redirectUri}`;
+
     } catch (error) {
       console.error("Connection error:", error);
       alert(
