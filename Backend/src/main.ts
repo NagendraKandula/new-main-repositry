@@ -9,7 +9,7 @@ async function bootstrap() {
 
   // Enable CORS (allow requests from frontend)
   app.enableCors({
-    origin: 'http://localhost:3000', // Frontend URL
+    origin: 'https://new-main-repositry.vercel.app', // Frontend URL
     credentials: true,               // Allows the browser to send and receive cookies
   });
 
