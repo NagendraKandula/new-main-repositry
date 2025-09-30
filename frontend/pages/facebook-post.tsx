@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import apiClient from '../lib/axios';
+import apiClient from '../lib/axios'; // You are already importing the correct client
 import styles from '../styles/FacebookPost.module.css';
 import { GetServerSideProps } from 'next';
 import { withAuth } from '../utils/withAuth';
@@ -33,11 +33,11 @@ const FacebookPostPage = () => {
     formData.append('media', mediaFile);
 
     try {
-      const response = await axios.post(
-        'http://localhost:4000/facebook/post',
+      // ✅ CHANGED: Use apiClient and remove the hardcoded URL
+      const response = await apiClient.post(
+        '/facebook/post',
         formData,
         {
-          withCredentials: true,
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -72,7 +72,6 @@ const FacebookPostPage = () => {
             <input
               type="file"
               accept="image/*,video/*"
-              // CORRECTED LINE
               onChange={handleFileChange}
               className={styles.fileInput}
               disabled={isLoading}
