@@ -58,7 +58,7 @@ export class AuthService {
     });
 
     // Redirect back to the frontend home page
-        return res.redirect('http://localhost:3000/Landing?youtube=connected');
+        return res.redirect('http://localhost:3000/page');
   }
 
   // REGISTER
@@ -215,7 +215,7 @@ export class AuthService {
       });
     }
 
-    return res.redirect('http://localhost:3000/facebook-post');
+    return res.redirect('http://localhost:3000/Landing');
   }
 
  

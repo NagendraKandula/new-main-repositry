@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "../styles/FacebookConnect.module.css";
 import { FaFacebookF } from "react-icons/fa";
 
 const FacebookConnect = () => {
+  const [loading, setLoading] = useState(false);
+
+  const handleConnectFacebook = () => {
+    setLoading(true);
+    try {
+      // Redirect to backend OAuth route
+      // Add a redirect query param to return to Landing page with "facebook=connected"
+      const redirectUri = encodeURIComponent("http://localhost:3000/Landing?facebook=connected");
+      window.location.href = `http://localhost:4000/auth/facebook?redirect=${redirectUri}`;
+    } catch (error) {
+      console.error("Connection error:", error);
+      alert("Unable to connect to Facebook. Please try again later.");
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -43,14 +59,19 @@ const FacebookConnect = () => {
           <p>🚫 We never post without your explicit approval</p>
         </div>
 
-        <button className={styles.connectButton}>
+        <button
+          className={styles.connectButton}
+          onClick={handleConnectFacebook}
+          disabled={loading}
+        >
           <FaFacebookF />
-          Connect to Facebook
+          {loading ? "Connecting..." : "Connect to Facebook"}
         </button>
 
         <div className={styles.footerNote}>
           <p>
-            By connecting, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+            By connecting, you agree to our <a href="#">Terms</a> and{" "}
+            <a href="#">Privacy Policy</a>.
           </p>
         </div>
       </div>

@@ -70,7 +70,7 @@ async handleCallback(@Req() req: Request, @Res() res: Response) {
 
 
     // Redirect user to frontend
-    return res.redirect('http://localhost:3000/home');
+    return res.redirect('http://localhost:3000/Landing');
   } catch (error: any) {
     console.error('LinkedIn authentication failed:', error.message);
     return res.redirect('http://localhost:3000/login?error=linkedin_failed');
