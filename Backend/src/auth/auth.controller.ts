@@ -78,13 +78,13 @@ export class AuthController {
     res.cookie('youtube_access_token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
-      sameSite: 'lax',
+      sameSite: 'none',
     });
 
     res.cookie('youtube_refresh_token', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'lax',
+      sameSite: 'none',
     });
 
     const frontendUrl = this.configService.get<string>('FRONTEND_URL');
