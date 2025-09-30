@@ -1,58 +1,46 @@
-import React, { Suspense, useRef, useEffect } from "react";
-import * as THREE from "three";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, useGLTF, useAnimations, Html } from "@react-three/drei";
+import React from "react";
 import styles from "../styles/HeroSection1.module.css";
 import { useRouter } from "next/router";
-
-interface EarthModelProps {
-  [key: string]: any;
-}
-
-function EarthModel(props: EarthModelProps) {
-  const group = useRef<THREE.Group>(null!);
-  const { scene, animations } = useGLTF("/earth.glb");
-  const { actions, mixer } = useAnimations(animations, group);
-
-  useEffect(() => {
-    if (actions && animations.length > 0) {
-      actions[animations[0].name]?.play();
-    }
-  }, [actions, animations]);
-
-  useFrame((_, delta) => {
-    mixer?.update(delta);
-  });
-
-  return <primitive ref={group} object={scene} scale={2.3} {...props} />;
-}
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInstagram, faThreads, faFacebook, faTwitter, faLinkedin, faPinterest, faYoutube } from '@fortawesome/free-brands-svg-icons';
 
 export default function HeroSection1() {
   const router = useRouter();
 
   return (
-    <section className={styles.hero}>
-      <div className={styles.heroContentWith3d}>
-        <div className={styles.content}>
-          <h1 className={styles.title}>Travel. Snap. We Post.</h1>
-          <p className={styles.tagline}>
-            Instantly broadcast your travel moments to friends and followers. 
-            Capture breathtaking views, share spontaneous adventures, and bring your journey to life in real time.
-          </p>
-          <button className={styles.ctaButton} onClick={() => router.push("/login")}>
-            Start Now
-          </button>
-        </div>
-        <div className={styles.modelContainer}>
-          <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
-            <ambientLight intensity={2.5} />
-            <directionalLight position={[0, 11, 5]} intensity={0.6} />
-            <Suspense fallback={<Html><span>Loading...</span></Html>}>
-              <EarthModel />
-            </Suspense>
-            <OrbitControls enablePan={false} />
-          </Canvas>
-        </div>
+    <section className={styles.mainContainer}>
+      {/* Background video */}
+      <video
+        className={styles.backgroundVideo}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto" 
+      >
+        <source src="/Himg1.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* Foreground content */}
+      <div className={styles.homeContent}>
+        <h1>Explore Fearlessly. Post Effortlessly</h1>
+        <p>Powerful social media management for explorers, creators & storytellers.</p>
+        <button
+          className={styles.ctaButton}
+          onClick={() => router.push("/login")}
+        >
+        Start Now
+        </button>
+        <div className={styles.socialIconsBubbles}>
+        <div className={styles.iconBubble} style={{ backgroundColor: '#E1306C' }}><FontAwesomeIcon icon={faInstagram} /></div>
+        <div className={styles.iconBubble} style={{ backgroundColor: '#000000' }}><FontAwesomeIcon icon={faThreads} /></div>
+        <div className={styles.iconBubble} style={{ backgroundColor: '#1877F2' }}><FontAwesomeIcon icon={faFacebook} /></div>
+        <div className={styles.iconBubble} style={{ backgroundColor: '#1DA1F2' }}><FontAwesomeIcon icon={faTwitter} /></div>
+        <div className={styles.iconBubble} style={{ backgroundColor: '#0A66C2' }}><FontAwesomeIcon icon={faLinkedin} /></div>
+        <div className={styles.iconBubble} style={{ backgroundColor: '#E60023' }}><FontAwesomeIcon icon={faPinterest} /></div>
+        <div className={styles.iconBubble} style={{ backgroundColor: '#FF0000' }}><FontAwesomeIcon icon={faYoutube} /></div>
+       </div>
       </div>
     </section>
   );

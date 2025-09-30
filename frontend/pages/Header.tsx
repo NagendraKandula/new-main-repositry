@@ -9,46 +9,47 @@ export default function Header() {
 
   return (
     <header className={styles.header}>
-      {/* Logo */}
-      <div className={styles.logo}>☐ LOGO</div>
+      <div className={styles.headerContainer}>
+        {/* Logo */}
+        <div className={styles.logo}>☐ LOGO</div>
 
-      {/* Navigation */}
-      <nav className={styles.nav}>
-        <a href="#">Features</a>
+        {/* Navigation */}
+        <nav className={styles.nav}>
+          <Link href="#">Features</Link>
 
-        {/* Dropdown for Channels */}
-        <div 
-          className={styles.dropdown} 
-          onMouseEnter={() => setIsOpen(true)} 
-          onMouseLeave={() => setIsOpen(false)}
-        >
-          <button className={styles.dropbtn}>
-            Channels ⮟
-          </button>
+          {/* Dropdown */}
+          <div className={styles.dropdown}>
+            <button
+              className={styles.dropbtn}
+              onClick={() => setIsOpen(!isOpen)}
+              aria-haspopup="true"
+              aria-expanded={isOpen}
+            >
+              Channels ▼
+            </button>
 
-          {isOpen && (
-            <div className={styles.dropdownContent}>
+            <div className={`${styles.dropdownContent} ${isOpen ? styles.show : ""}`}>
               <div className={styles.grid}>
                 <Link href="#"><FaFacebook /> Facebook</Link>
                 <Link href="#"><FaInstagram /> Instagram</Link>
                 <Link href="#"><FaYoutube /> YouTube</Link>
-                <Link href="#"><FaTwitter /> Twitter (X)</Link>
+                <Link href="#"><FaTwitter /> Twitter</Link>
                 <Link href="#"><FaPinterest /> Pinterest</Link>
                 <Link href="#"><FaLinkedin /> LinkedIn</Link>
                 <Link href="#"><SiThreads /> Threads</Link>
               </div>
             </div>
-          )}
+          </div>
+
+          <Link href="#">Blog</Link>
+          <Link href="#">FAQs</Link>
+        </nav>
+
+        {/* Auth buttons */}
+        <div className={styles.actions}>
+          <Link href="/login" className={styles.loginButton}>Log In</Link>
+          <Link href="/register" className={styles.getStartedButton}>Get Started</Link>
         </div>
-
-        <a href="#">Blog</a>
-        <a href="#">FAQs</a>
-      </nav>
-
-      {/* Auth buttons */}
-      <div className={styles.actions}>
-        <Link href="/login" className={styles.loginButton}>Log In</Link>
-        <Link href="/register" className={styles.getStartedButton}>Get Started</Link>
       </div>
     </header>
   );

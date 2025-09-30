@@ -4,41 +4,41 @@ import HeroSection2 from "./HeroSection2";
 import HeroSection3 from "./HeroSection3";
 import styles from "../styles/HeroContainer.module.css";
 
-// Import HeroSection1 only on client
+// Load HeroSection1 only on client
 const HeroSection1 = dynamic(() => import("./HeroSection1"), { ssr: false });
 
 export default function HeroContainer() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
   const slides = [
     <HeroSection1 key={0} />,
     <HeroSection2 key={1} />,
     <HeroSection3 key={2} />,
   ];
 
-  const nextSlide = () =>
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Auto-scroll logic
   useEffect(() => {
     const interval = setInterval(() => {
-      nextSlide();
-    }, 5000); // auto-scroll every 5s
-
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 8000); // 8s per slide
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className={styles.heroContainer}>
-      {slides[currentSlide]}
+      {slides.map((Slide, index) => (
+        <div
+          key={index}
+          className={`${styles.slide} ${currentSlide === index ? styles.active : ""}`}
+        >
+          {Slide}
+        </div>
+      ))}
 
       <div className={styles.dotsNav}>
         {slides.map((_, index) => (
           <span
             key={index}
-            className={`${styles.dot} ${
-              currentSlide === index ? styles.activeDot : ""
-            }`}
+            className={currentSlide === index ? styles.activeDot : styles.dot}
             onClick={() => setCurrentSlide(index)}
           >
             {currentSlide === index ? "●" : "○"}

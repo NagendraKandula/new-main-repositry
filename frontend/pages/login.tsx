@@ -30,7 +30,7 @@ export default function LoginPage() {
       if (response.ok) {
         setMessage(data.message || 'Login successful');
         // Redirect to home page on success
-        router.push('/home');
+        router.push('/Landing');
       } else {
         throw new Error(data.message || 'Login failed');
       }

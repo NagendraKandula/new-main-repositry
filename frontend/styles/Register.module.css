@@ -1,9 +1,9 @@
-/* --- Paste this entire block to replace your existing CSS file --- */
+/* --- Bold & Vibrant Signup Page CSS --- */
 .pageGifBg {
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background: rgb(128, 127, 127);
+  background: white;
 }
 
 .centeredContent {
@@ -17,21 +17,24 @@
 }
 
 .loginCard {
-  background: rgb(255, 255, 255);
+  background: white;
   border-radius: 18px;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.08);
-  border: 1.5px solid #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
   width: 470px;
-  height: auto;
+  max-width: 90vw;
   padding: 2rem;
+  animation: float 3s ease-in-out infinite;
 }
 
 .loginTitle {
   font-family: 'Inter', Arial, sans-serif;
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: #1f2937;
   margin-bottom: 1.3rem;
   text-align: center;
+  letter-spacing: -0.01em;
 }
 
 .loginForm {
@@ -47,10 +50,10 @@
 }
 
 .inputLabel {
-  color: #101010;
+  color: #1f2937;
   font-family: 'Inter', Arial, sans-serif;
   font-size: 1.1rem;
-  font-weight: 500;
+  font-weight: 600;
   margin-left: 20px;
 }
 
@@ -58,28 +61,33 @@
   width: 90%;
   height: 3.2rem;
   border-radius: 1rem;
-  border: 1.5px solid #111;
+  border: 1.5px solid #e2e8f0;
   font-size: 1rem;
-  color: #232323;
+  color: #1f2937;
   padding: 0 1rem;
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 600;
   margin: 0 auto;
   display: block;
-  box-sizing: border-box; /* Important for consistent sizing */
+  box-sizing: border-box;
+  transition: border 0.2s, box-shadow 0.2s;
 }
 
-/* --- THE FIX FOR INPUT SIZES --- */
+.input:focus {
+  outline: none;
+  border-color: #f472b6;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25);
+}
+
 .passwordWrapper {
   position: relative;
-  width: 90%; /* Match the width of other inputs */
-  margin: 0 auto; /* Center it */
+  width: 90%;
+  margin: 0 auto;
 }
 
 .passwordWrapper .input {
-  width: 100%; /* Make the input fill its wrapper */
+  width: 100%;
 }
-/* --- END OF FIX --- */
 
 .toggleEye {
   position: absolute;
@@ -90,43 +98,48 @@
   z-index: 2;
   display: flex;
   align-items: center;
+  color: #ec4899;
 }
 
 .button, .googleButton {
   width: 70%;
   height: 3.2rem;
   border-radius: 1rem;
-  border: 1.5px solid #222;
   font-size: 1.1rem;
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.18s, color 0.18s;
   margin: 0.1rem auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none; /* For the 'a' tag google button */
+  text-decoration: none;
+  transition: all 0.25s ease;
 }
 
 .button {
-  background: #000;
-  color: #fff;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  color: white;
+  border: none;
+  font-weight: 700;
 }
 
 .button:hover, .button:active {
-  background: #fff;
-  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
 }
 
 .googleButton {
-  background: #fff;
-  color: #000;
+  background: white;
+  color: #1f2937;
+  border: 1.5px solid #e5e7eb;
   gap: 0.7em;
 }
 
 .googleButton:hover {
-  background: #f1f1f1;
+  background: #f9fafb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .divider {
@@ -135,13 +148,14 @@
   justify-content: center;
   gap: 1rem;
   margin: 0.3rem 0;
-  color: #202020;
+  color: #6b7280;
+  font-weight: 600;
 }
 
 .dividerLine {
   flex-grow: 1;
   height: 1.5px;
-  background: #ddd;
+  background: #e5e7eb;
 }
 
 .passwordStrengthContainer {
@@ -149,62 +163,73 @@
   margin: -5px auto 15px auto;
 }
 
-.strengthBarWrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
+.strengthIndicator.strength-weak {
+  width: 33%;
+  background-color: #f87171; /* soft red */
+}
+.strengthIndicator.strength-medium {
+  width: 66%;
+  background-color: #fbbf24; /* warm amber */
+}
+.strengthIndicator.strength-strong {
+  width: 100%;
+  background-color: #34d399; /* soft green */
 }
 
-.strengthBar {
-  flex-grow: 1;
-  height: 8px;
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  overflow: hidden;
+.strengthText-weak { color: #ef4444; }
+.strengthText-medium { color: #d97706; }
+.strengthText-strong { color: #0d9488; /* deeper teal-green */ }
+
+.validationList li.valid {
+  color: #0d9488;
+  text-decoration: line-through;
 }
-
-.strengthIndicator {
-  height: 100%;
-  width: 0%;
-  transition: width 0.3s ease, background-color 0.3s ease;
-}
-
-.strengthIndicator.strength-weak { width: 33%; background-color: #ff4d4d; }
-.strengthIndicator.strength-medium { width: 66%; background-color: #ff9d4d; }
-.strengthIndicator.strength-strong { width: 100%; background-color: #4dff4d; }
-
-.strengthText { font-size: 0.8rem; font-weight: bold; }
-.strengthText-weak { color: #ff4d4d; }
-.strengthText-medium { color: #ff9d4d; }
-.strengthText-strong { color: #4dff4d; }
-
-.validationList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: 0.8rem;
-  color: #666;
-}
-
-.validationList li { margin-bottom: 4px; }
-.validationList li.valid { color: #4dff4d; text-decoration: line-through; }
 
 .errorMessage, .successMessage {
   text-align: center;
   margin-top: 10px;
+  font-weight: 600;
+  font-family: 'Inter', Arial, sans-serif;
 }
-.errorMessage { color: red; }
-.successMessage { color: green; }
+.errorMessage {
+  color: #ef4444;
+}
+.successMessage {
+  color: #10b981;
+}
 
 .signupLink {
   text-align: center;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
+  color: #4b5563;
+  margin-top: 0.2rem;
 }
 
 .link {
-  color: #4877f5;
+  color: #ec4899;
   text-decoration: underline;
-  font-weight: 600;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #db2777;
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .loginCard {
+    width: 95vw;
+    padding: 1.5rem;
+  }
+
+  .button, .googleButton {
+    width: 85%;
+  }
+
+  .googleButtonText {
+    font-size: 0.95rem;
+  }
 }

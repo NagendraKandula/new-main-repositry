@@ -1,143 +1,138 @@
-/* Header Container */
+/* Full header background */
 .header {
+  width: 100%;
+  height: 100px;
+  background: black;
+  margin: 0 0 0 0;
+}
+
+/* Centered container */
+.headerContainer {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 40px;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+  padding: 15px 20px;
 }
 
 /* Logo */
 .logo {
-  font-size: 22px;
+  font-size: 30px;
   font-weight: bold;
+  color: white;
+  align-items: center;
+  margin-left: 50px;
+  margin-top: 10px;
 }
 
 /* Navigation */
 .nav {
   display: flex;
-  gap: 20px;
+  gap: 60px;
   align-items: center;
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
 }
 
 /* Dropdown */
 .dropdown {
   position: relative;
-  display: inline-block;
 }
 
 .dropbtn {
   background: none;
   border: none;
-  font-size: 16px;
+  color: white;
   cursor: pointer;
-  font-weight: 500;
+  font-size: 16px;
 }
 
 .dropdownContent {
   display: none;
   position: absolute;
-  top: 30px;
+  top: 100%;
   left: 0;
-  background-color: white;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  background: white;
+  min-width: 250px;
   border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   z-index: 10;
 }
 
-.dropdownContent a {
+.dropdownContent.show {
   display: block;
-  padding: 10px 15px;
-  text-decoration: none;
-  color: #333;
-  font-size: 14px;
-}
-
-.dropdownContent a:hover {
-  background-color: #f1f1f1;
-}
-
-/* Show dropdown on hover */
-.dropdown:hover .dropdownContent {
-  display: block;
-}
-
-/* Buttons */
-.actions {
-  display: flex;
-  gap: 10px;
-}
-
-.loginButton {
-  padding: 8px 16px;
-  border: 1px solid #333;
-  border-radius: 6px;
-  text-decoration: none;
-  color: #333;
-}
-
-.getStartedButton {
-  padding: 8px 16px;
-  background-color: #0070f3;
-  color: white;
-  border-radius: 6px;
-  text-decoration: none;
 }
 
 /* Grid inside dropdown */
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(150px, 1fr)); /* 2 vertical columns */
-  gap: 14px 40px; /* spacing between rows & columns */
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 40px;
+  padding: 10px;
 }
 
 .grid a {
   display: flex;
   align-items: center;
-  gap: 8px;
-  text-decoration: none;
+  gap: 10px;
   color: #333;
   font-size: 14px;
+  text-decoration: none;
 }
 
 .grid a:hover {
   color: #0070f3;
 }
 
-/* Hero container */
-.heroContainer {
-  position: relative;
-  width: 100%;
-  height: 100vh; /* full height */
-  overflow: hidden;
+/* Buttons */
+.actions {
   display: flex;
-  justify-content: center;
-  align-items: center; /* center slide content */
+  gap: 20px;           /* space between buttons */
+  justify-content: center;  /* center buttons horizontally */
+  align-items: center;      /* vertically aligned */
+  margin-right: 50px;
+  margin-top: 10px;
 }
 
-/* Dots navigation in the middle */
-.dotsNav {
-  position: absolute;
-  top: 50%; /* middle of screen */
-  left: 50%;
-  transform: translate(-50%, -50%); /* perfect center */
-  display: flex;
-  gap: 12px;
-  cursor: pointer;
+
+.loginButton {
+  padding: 7px 16px;
+  border: 1px solid #333;
+  border-radius: 14px;
+  background: white;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  text-align: center;
 }
 
-.dot {
-  font-size: 24px;
-  color: #aaa;
-  transition: color 0.3s ease;
+.getStartedButton {
+  padding: 8px 25px;
+  background-color: #3892fa;
+  color: white;
+  border-radius: 18px;
+  text-decoration: none;
+  font-size: 22px;
+  text-align: center;
+  border: 0.5px solid white;
 }
 
-.activeDot {
-  color: #000; /* active dot color */
+.getStartedButton:hover {
+  background-color: #1a73e8;
+  border: 0.5px solid #1a73e8;
 }
 
-.dot:hover {
-  color: #555; /* hover effect */
+
+/* Responsive: Hide nav/buttons on small screens (optional) */
+@media (max-width: 768px) {
+  .nav,
+  .actions {
+    display: none;
+  }
 }

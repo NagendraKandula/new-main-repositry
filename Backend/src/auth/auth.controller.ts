@@ -85,7 +85,7 @@ export class AuthController {
     });
 
     // Redirect back to the frontend
-    res.redirect('http://localhost:3000/home'); // Or any other page
+    res.redirect('http://localhost:3000/Landing?youtube=connected'); // Or any other page
   }
   @Get('facebook')
   @UseGuards(AuthGuard('facebook'))

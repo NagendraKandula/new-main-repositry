@@ -1,94 +1,49 @@
-.hero {
+.heroContainer {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100vh;        /* full viewport height */
+  margin: 0 0 0 0;            /* remove default gaps */
+  padding: 0;
   overflow: hidden;
+}
+
+/* Each slide stacked */
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  background: linear-gradient(180deg, #0d0d0d 0%, #1a1a1a 100%);
+  opacity: 0.3;
+  transition: opacity 0.8s ease-in-out;
+  z-index: 1;
 }
 
-.heroContentWith3d {
+.slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+/* Dots navigation */
+.dotsNav {
+  position: absolute;
+  margin-top: 580px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 90%;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.content {
-  flex: 1;
-  color: #ffffff;
+  gap: 10px;
   z-index: 10;
 }
 
-.title {
-  font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-.tagline {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  line-height: 1.5;
-}
-
-.ctaButton {
-  padding: 0.75rem 1.5rem;
-  background-color: #0070f3;
-  color: white;
-  border: none;
-  border-radius: 8px;
+.dot {
+  font-size: 18px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s ease;
+  color: #ccc;
 }
 
-.ctaButton:hover {
-  background-color: #005bb5;
-}
-
-.modelContainer {
-  flex: 1;
-  height: 600px;
-  max-width: 700px;
-}
-
-@media (max-width: 1024px) {
-  .heroContentWith3d {
-    flex-direction: column;
-  }
-
-  .modelContainer {
-    height: 400px;
-    width: 100%;
-    margin-top: 2rem;
-  }
-
-  .title {
-    font-size: 2.5rem;
-  }
-
-  .tagline {
-    font-size: 1.1rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .title {
-    font-size: 2rem;
-  }
-
-  .tagline {
-    font-size: 1rem;
-  }
-
-  .ctaButton {
-    width: 100%;
-    text-align: center;
-  }
+.activeDot {
+  color: #3892fa;
 }

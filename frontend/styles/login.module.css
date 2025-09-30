@@ -10,7 +10,7 @@
   position: fixed;
   inset: 0;
   z-index: 0;
-  background: rgb(211, 210, 210);
+  background: white;
   width: 100vw;
   height: 100vh;
 }
@@ -27,8 +27,8 @@
 .loginCard {
   background: white;
   border-radius: 18px;
-  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.08);
-  border: 1.5px solid #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1f5f9;
   max-width: 500px;
   width: 100%;
   padding: 2rem;
@@ -37,10 +37,10 @@
 .loginTitle {
   font-family: 'Inter', Arial, sans-serif;
   font-size: 2rem;
-  font-weight: 600;
-  color: #000;
+  font-weight: 700;
+  color: #1f2937;
   margin-bottom: 1.5rem;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
   text-align: center;
 }
 
@@ -55,14 +55,13 @@
   flex-direction: column;
   gap: 0.3rem;
   position: relative;
-  align-items: center; /* Center contents horizontally */
 }
 
 .inputLabel {
-  color: #101010;
+  color: #1f2937;
   font-family: 'Inter', Arial, sans-serif;
   font-size: 1.1rem;
-  font-weight: 500;
+  font-weight: 600;
   align-self: flex-start;
   margin-left: 20px;
 }
@@ -72,41 +71,41 @@
   max-width: 420px;
   height: 3.2rem;
   border-radius: 1rem;
-  border: 1.5px solid #111;
+  border: 1.5px solid #e2e8f0;
   font-size: 1rem;
-  color: #232323;
+  color: #1f2937;
   padding: 0 1rem;
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 600;
-  background: #fff;
-  transition: border 0.2s;
+  background: white;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #f472b6;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25);
 }
 
 .input::placeholder {
-  color: #bcbcbc;
+  color: #94a3b8;
   font-weight: 400;
   opacity: 1;
 }
 
-.passwordWrapper {
-  position: relative;
-  width: 100%;
-  max-width: 450px;
-}
-
 .toggleEye {
   position: absolute;
-  top: 71%;
   right: 2rem;
+  top: 50px;
   transform: translateY(-50%);
-  width: 2.5rem;
-  height: 2.2rem;
+  width: 1.8rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   cursor: pointer;
   user-select: none;
   z-index: 2;
-  color: #4877f5;
+  color: #ec4899;
 }
 
 .toggleEye svg {
@@ -122,56 +121,16 @@
   margin: 0.1rem 0 0.2rem;
   font-size: 1rem;
   font-family: 'Inter', Arial, sans-serif;
-  font-weight: 500;
-  color: #4b4b4b;
+  font-weight: 600;
+  color: #6b7280;
 }
 
 .dividerLine {
   flex: 1;
   height: 1px;
-  background-color: #bcbcbc;
+  background-color: #e5e7eb;
   margin: 0 5%;
 }
-
-.googleButton {
-  width: 70%;
-  max-width: 300px;
-  height: 3.2rem;
-  border-radius: 1rem;               /* ✅ same rounded corners */
-  font-size: 1.1rem;
-  font-family: 'Inter', Arial, sans-serif;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0.8rem auto;               /* ✅ same spacing */
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-  border: 1.5px solid #222;      
-  text-decoration: none ;    
-}
-
-
-.googleButton:hover,
-.googleButton:focus {
-  background: #f7f7f7;
-  box-shadow: 0 2px 8px rgba(60,64,67,.12);
-}
-
-.googleIcon {
-  display: inline-block;
-  vertical-align: middle;
-  width: 24px;
-  height: 24px;
-  margin-right: 12px;
-}
-
-.googleButtonText {
-  vertical-align: middle;
-  font-size: 1.1rem;
-  font-family: inherit;
-}
-
 
 .optionsRow {
   display: flex;
@@ -187,24 +146,24 @@
   align-items: center;
   font-size: 1.1rem;
   font-family: 'Inter', Arial, sans-serif;
-  font-weight: 500;
-  color: black;
+  font-weight: 600;
+  color: #1f2937;
   gap: 0.4em;
   cursor: pointer;
   user-select: none;
 }
 
 .rememberCheckbox {
-  accent-color: #040404;
+  accent-color: #ec4899;
   width: 1.5em;
   height: 1.5em;
   cursor: pointer;
 }
 
 .forgotPasswordLink {
-  color: #000000;
+  color: #ec4899;
   font-family: 'Inter', Arial, sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1rem;
   text-decoration: underline;
   cursor: pointer;
@@ -212,7 +171,7 @@
 
 .forgotPasswordLink:hover,
 .forgotPasswordLink:focus {
-  color: #000000;
+  color: #db2777;
   text-decoration: none;
 }
 
@@ -220,23 +179,57 @@
   width: 70%;
   max-width: 300px;
   height: 3.2rem;
-  background: #000000;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
   border-radius: 1rem;
-  border: 1.5px solid #222;
+  border: none;
   font-size: 1.25rem;
   font-family: 'Inter', Arial, sans-serif;
-  font-weight: 600;
-  color: rgb(255, 255, 255);
+  font-weight: 700;
+  color: white;
   cursor: pointer;
-  transition: background 0.18s;
+  transition: transform 0.2s, box-shadow 0.2s;
   margin: 0.1rem auto;
   display: block;
 }
 
 .button:hover,
 .button:active {
-  background: #ffffff;
-  color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+}
+
+.googleButton {
+  width: 70%;
+  max-width: 300px;
+  height: 3.2rem;
+  border-radius: 1rem;
+  font-size: 1.1rem;
+  font-family: 'Inter', Arial, sans-serif;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.8rem auto;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  border: 1.5px solid #e5e7eb;
+  text-decoration: none;
+  color: #1f2937;
+  background: white;
+}
+
+.googleButton:hover,
+.googleButton:focus {
+  background: #f9fafb;
+  transform: translateY(-1px);
+}
+
+.googleIcon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
 }
 
 .signupLink {
@@ -244,34 +237,38 @@
   font-size: 1.08rem;
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 600;
-  color: #222;
+  color: #4b5563;
   margin-top: 0.1rem;
 }
 
 .signupLinkText {
-  color: #000000;
+  color: #ec4899;
   text-decoration: underline;
   cursor: pointer;
 }
 
 .message {
   margin-top: 1rem;
-  color: #333;
   text-align: center;
   font-weight: 600;
+  font-family: 'Inter', Arial, sans-serif;
 }
 
-/* Optional for mobile: */
+.message.success {
+  color: #10b981;
+}
+
+.message.error {
+  color: #ef4444;
+}
+
 @media (max-width: 500px) {
   .googleButton {
     padding: 0.7rem 0.5rem;
     font-size: 1rem;
     min-width: 0;
   }
-  .googleButtonText {
-    font-size: 1rem;
-  }
   .googleIcon {
-   display: none;  /* Hide the icon on small screens */
+    display: none;
   }
 }

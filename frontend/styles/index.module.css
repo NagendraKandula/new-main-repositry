@@ -1,14 +1,6 @@
-.mainContainer {
-  min-height: calc(100vh - 70px);
+.container {
+  width: 100%;
+  min-height: 100vh; /* 👈 Use min-height instead of height */
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.homeText {
-  font-size: 4rem;
-  font-weight: bold;
-  color: #222;
-  font-family: 'Inter', Arial, sans-serif;
-  letter-spacing: 0.05em;
+  flex-direction: column;
 }

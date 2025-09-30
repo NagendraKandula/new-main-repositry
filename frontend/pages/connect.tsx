@@ -5,8 +5,7 @@ import styles from "../styles/connect.module.css";
 const ConnectPage = () => {
   // State to track if YouTube is connected
   const [isYouTubeConnected, setIsYouTubeConnected] = useState(false);
-  const [isFacebookConnected, setIsFacebookConnected] = useState(false); 
-  const [isLinkedInConnected, setIsLinkedInConnected] = useState(false);
+
   // Why is this needed?
   // We use useEffect to check for the YouTube access token cookie when the component
   // first loads. This allows us to show "Connected" if the user has already
@@ -16,35 +15,29 @@ const ConnectPage = () => {
     if (document.cookie.includes('youtube_access_token=')) {
       setIsYouTubeConnected(true);
     }
-    if (document.cookie.includes('facebook_access_token=')) {
-      setIsFacebookConnected(true);
-    }
-    if (document.cookie.includes('linkedin_access_token=')) {
-      setIsLinkedInConnected(true);
-    }
   }, []); // The empty dependency array ensures this runs only once on mount
 
   const platforms = [
     {
       name: "Instagram",
       connected: false,
-      icon: <FaInstagram className={styles.icon} />,
+      icon: <FaInstagram className={styles.icon}/>,
       url: "https://www.instagram.com/accounts/login/",
     },
     {
       name: "Facebook",
-      connected: isFacebookConnected,
+      connected: false,
       icon: <FaFacebook className={styles.icon} />,
-      url: "http://localhost:4000/auth/facebook",
+      url: "https://www.facebook.com/login/",
     },
     {
       name: "LinkedIn",
       connected: false,
       icon: <FaLinkedin className={styles.icon} />,
-      url: "http://localhost:4000/auth/linkedin",
+      url: "https://www.linkedin.com/login/",
     },
     {
-      name: "X (Twitter)",
+      name: "Twitter",
       connected: false,
       icon: <FaTwitter className={styles.icon} />,
       url: "https://twitter.com/login/",
@@ -57,21 +50,14 @@ const ConnectPage = () => {
     },
     {
       name: "YouTube",
-      // Dynamically set the 'connected' status from our state
-      connected: isYouTubeConnected,
+      connected: true,
       icon: <FaYoutube className={styles.icon} />,
-      // --- CHANGE 1: Point this URL to your backend API endpoint ---
       url: "http://localhost:4000/auth/youtube",
     },
   ];
 
-  // Why is this needed?
-  // This function handles the click event for the "Connect" button. For OAuth, we must
-  // redirect the user's browser to our backend endpoint. Opening a new tab with
-  // `window.open` would break the OAuth flow, as the backend needs to redirect the
-  // original tab back to your application after authentication.
   const handleConnect = (url: string, platformName: string) => {
-    if (platformName === "YouTube" || platformName === "Facebook" || platformName === "LinkedIn") {
+    if (platformName === "YouTube") {
       // --- CHANGE 2: Redirect the current page for the OAuth flow ---
       window.location.href = url;
     } else {
@@ -83,7 +69,7 @@ const ConnectPage = () => {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <h1 className={styles.heading}>LOGO</h1>
+        <h1 className={styles.heading}>☐ LOGO</h1>
         <h2 className={styles.subheading}>Connect your social media in seconds</h2>
         <p className={styles.subsubheading}>
           From posting to publish, AI content to analytics — everything starts with a connection.
@@ -109,6 +95,17 @@ const ConnectPage = () => {
               </button>
             </div>
           ))}
+        </div>
+        <div className={styles.skipContainer}>
+          <button
+            className={styles.skipButton}
+            onClick={() => {
+          localStorage.setItem('socialConnectSkipped', 'true'); // Optional: remember they skipped
+           window.location.href = "/Landing"; // Redirect to Landing Page
+    }}
+  >
+    Skip
+    </button>
         </div>
       </div>
     </div>

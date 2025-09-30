@@ -1,0 +1,72 @@
+/* ====== LANDING PAGE LAYOUT ====== */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Fixed Header */
+.header {
+  flex: 0 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white; /* Ensure it covers content when scrolling */
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Main Area: Sidebar + Content */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Fixed Sidebar */
+.sidebar {
+  flex: 0 0 260px;
+  height: 100%;
+  overflow-y: auto;
+  padding-top: 20px; /* Optional: space below header */
+}
+
+/* Scrollable Content Area */
+.content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+  background: #fcfcfd;
+}
+
+/* Placeholder Content */
+.placeholder {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.placeholder h2 {
+  font-size: 1.8rem;
+  color: #1d1d1f;
+  margin-bottom: 16px;
+}
+
+.placeholder p {
+  font-size: 1.1rem;
+  color: #575759;
+  line-height: 1.6;
+}
+
+/* Responsive: Collapse sidebar on mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    flex: 0 0 80px;
+  }
+
+  .content {
+    padding: 20px;
+  }
+}
