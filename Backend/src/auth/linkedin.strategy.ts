@@ -59,13 +59,13 @@ async handleCallback(@Req() req: Request, @Res() res: Response) {
     res.cookie('linkedin_access_token', tokenResponse.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'lax',
+      sameSite: 'none',
     });
 
     res.cookie('linkedin_id_token', tokenResponse.id_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'lax',
+      sameSite: 'none',
     });
 
     const frontendUrl = this.configService.get<string>('FRONTEND_URL')!;
