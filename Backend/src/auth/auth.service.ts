@@ -87,7 +87,7 @@ export class AuthService {
     res.cookie('access_token', token, {
       httpOnly: true,
       secure: false, // Set to true in production (requires HTTPS)
-      sameSite: 'lax',
+      sameSite: 'none',
       expires: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour
     });
     return { message: 'Account created successfully' };
@@ -110,7 +110,7 @@ export class AuthService {
     res.cookie('access_token', token, {
       httpOnly: true,
       secure: false, // Set to true in production (requires HTTPS)
-      sameSite: 'lax',
+      sameSite: 'none',
       expires: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour
     });
     return { message: 'Login successful'};
@@ -204,14 +204,14 @@ export class AuthService {
     res.cookie('facebook_access_token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'lax',
+      sameSite: 'none',
     });
 
     if (refreshToken) {
       res.cookie('facebook_refresh_token', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== 'development',
-        sameSite: 'lax',
+        sameSite: 'none',
       });
     }
      const frontendUrl = this.config.get<string>('FRONTEND_URL');
