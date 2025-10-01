@@ -212,7 +212,25 @@ export class AuthService {
   }
 
  
+async twitterLogin(req, res: Response) {
+    if (!req.user) {
+      throw new BadRequestException('No user from twitter');
+    }
+    const{email,fullName,accessToken,accessTokenSecret} = req.user;
+    res.cookie('twitter_access_token', accessToken, {
+    httpOnly: true,
+    secure: this.config.get('NODE_ENV') !== 'development',
+    sameSite: 'none',
+  });
+   res.cookie('twitter_access_token_secret', accessTokenSecret, {
+    httpOnly: true,
+    secure: this.config.get('NODE_ENV') !== 'development',
+    sameSite: 'none',
+  });
+  const frontendUrl = this.config.get<string>('FRONTEND_URL');
+  return res.redirect(`${frontendUrl}/Landing?twitter=connected`);
 
+}
 
 
 }

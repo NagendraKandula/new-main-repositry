@@ -101,4 +101,17 @@ export class AuthController {
     // You can create a new service method for this or reuse the googleLogin logic
     return this.authService.facebookLogin(req, res);
   }
+
+@Get('twitter')
+  @UseGuards(AuthGuard('twitter'))
+  async twitterAuth(@Req() req) {
+    // Initiates the Twitter OAuth1.0a login flow
+  }
+  @Get('twitter/callback')
+  @UseGuards(AuthGuard('twitter'))
+  twitterAuthRedirect(@Req() req, @Res({ passthrough: true }) res: Response) {
+    // You can create a new service method for this or reuse the googleLogin logic
+    return this.authService.twitterLogin(req, res);
+  }
+
 }

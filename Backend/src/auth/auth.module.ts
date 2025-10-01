@@ -11,6 +11,7 @@ import { YoutubeStrategy } from './youtube.strategy';
 import { YoutubeModule } from './youtube/youtube.module'; 
 import { FacebookStrategy } from './facebook.strategy';// <-- Import YoutubeStrategy
 import { LinkedinStrategy } from './linkedin.strategy';
+import { TwitterStrategy } from './twitter.strategy';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { LinkedinStrategy } from './linkedin.strategy';
     }),
   ],
   controllers: [AuthController, LinkedinStrategy],
-  providers: [AuthService, JwtStrategy, GoogleStrategy,YoutubeStrategy,FacebookStrategy], // <-- Add GoogleStrategy
+  providers: [AuthService, JwtStrategy, GoogleStrategy,YoutubeStrategy,FacebookStrategy, TwitterStrategy], // <-- Add GoogleStrategy
   exports: [AuthService, JwtModule], 
 })
 export class AuthModule {}
