@@ -2,28 +2,28 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
-import { ConfigService } from '@nestjs/config'; // ✅ Import ConfigService
+import { ConfigService } from '@nestjs/config'; 
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const configService = app.get(ConfigService); // ✅ Get instance of ConfigService
-  const frontendUrl = configService.get<string>('FRONTEND_URL'); // ✅ Get frontend URL
-  const port = configService.get<number>('PORT'); // ✅ Get port
+  const configService = app.get(ConfigService);
+  const frontendUrl = configService.get<string>('FRONTEND_URL');
 
   // Enable CORS using the environment variable
   app.enableCors({
-    origin: frontendUrl, // ✅ Use the variable
+    origin: frontendUrl, // ✅ Use the variable here
     credentials: true,
   });
-
   // Enables class-validator and class-transformer for all incoming requests
   app.useGlobalPipes(new ValidationPipe());
 
   // Enables cookie parsing for all incoming requests
   app.use(cookieParser());
   
-  // Start the application on the port from the environment variable
-  await app.listen(port); // ✅ Use the variable
+  const port = configService.get<number>('PORT') || 4000;
+  await app.listen(port);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
