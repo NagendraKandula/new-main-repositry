@@ -16,6 +16,7 @@ import YouTubePost from "./YouTubePost";
 import InstagramConnect from "./InstagramConnect";
 import FacebookConnect from "./FacebookConnect";
 import TwitterConnect from "./TwitterConnect";
+import TwitterPost from "./TwitterPost";
 import LinkedInConnect from "./LinkedInConnect";
 import PinterestConnect from "./PinterestConnect";
 import ThreadsConnect from "./ThreadsConnect";
@@ -25,13 +26,19 @@ const Landing = () => {
   const [activeSegment, setActiveSegment] = useState("Create");
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
   const [youtubeConnected, setYoutubeConnected] = useState(false);
+  const [twitterConnected, setTwitterConnected] = useState(false);
 
-  // Check URL query for YouTube connection
+  // Check URL query for YouTube or Twitter connection
   useEffect(() => {
     if (router.query.youtube === "connected") {
       setActivePlatform("youtube");
       setYoutubeConnected(true);
-      // Optional: remove query param after reading
+      router.replace("/Landing", undefined, { shallow: true });
+    }
+
+    if (router.query.twitter === "connected") {
+      setActivePlatform("twitter");
+      setTwitterConnected(true);
       router.replace("/Landing", undefined, { shallow: true });
     }
   }, [router.query]);
@@ -41,12 +48,12 @@ const Landing = () => {
       switch (activePlatform) {
         case "youtube":
           return youtubeConnected ? <YouTubePost /> : <YouTubeConnect />;
+        case "twitter":
+          return twitterConnected ? <TwitterPost /> : <TwitterConnect />;
         case "instagram":
           return <InstagramConnect />;
         case "facebook":
           return <FacebookConnect />;
-        case "twitter":
-          return <TwitterConnect />;
         case "linkedin":
           return <LinkedInConnect />;
         case "pinterest":
