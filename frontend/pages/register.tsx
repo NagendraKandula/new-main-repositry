@@ -82,7 +82,7 @@ export default function SignupPage() {
       setPassword("");
       setConfirmPassword("");
 
-      router.push("/Landing");
+      router.push("/login");
     } catch (err: any) {
       const serverError = err.response?.data?.message;
       setError(
