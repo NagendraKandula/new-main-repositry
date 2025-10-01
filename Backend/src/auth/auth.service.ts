@@ -83,13 +83,6 @@ export class AuthService {
         password: hashedPassword,
       },
     });
-    const token = await this.signToken(user.id, user.email);
-    res.cookie('access_token', token, {
-      httpOnly: true,
-      secure: false, // Set to true in production (requires HTTPS)
-      sameSite: 'none',
-      expires: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour
-    });
     return { message: 'Account created successfully' };
   }
 
@@ -109,7 +102,7 @@ export class AuthService {
     const token = await this.signToken(user.id, user.email);
     res.cookie('access_token', token, {
       httpOnly: true,
-      secure: false, // Set to true in production (requires HTTPS)
+      secure: this.config.get('NODE_ENV') !== 'development', // Set to true in production (requires HTTPS)
       sameSite: 'none',
       expires: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour
     });
