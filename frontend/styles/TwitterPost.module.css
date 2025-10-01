@@ -24,8 +24,8 @@
   margin-bottom: 1.5rem;
 }
 
-.youtubeIcon {
-  color: #ff0000;
+.twitterIcon {
+  color: #1da1f2;
   font-size: 2rem;
 }
 
@@ -48,41 +48,7 @@
   gap: 1.5rem;
 }
 
-.platformSelector {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.platformOption {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: 2px solid #ddd;
-  transition: all 0.2s;
-}
-
-.platformOption.selected {
-  border-color: #ff0000;
-  background: #fff;
-}
-
-.postType {
-  margin-bottom: 1rem;
-}
-
-.radioLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 500;
-}
-
-/* === Upload Area === */
+/* Upload Area */
 .uploadArea {
   border: 2px dashed #ccc;
   border-radius: 8px;
@@ -102,12 +68,12 @@
 }
 
 .uploadArea span {
-  color: #007bff;
+  color: #1da1f2;
   text-decoration: underline;
   cursor: pointer;
 }
 
-/* === Tools Bar === */
+/* Tools Bar */
 .toolsBar {
   display: flex;
   align-items: center;
@@ -129,11 +95,11 @@
 }
 
 .toolButton:hover {
-  color: #007bff;
+  color: #1da1f2;
 }
 
 .aiAssistantButton {
-  background-color: #28a745; /* Green */
+  background-color: #1da1f2;
   color: white;
   border: none;
   border-radius: 6px;
@@ -147,13 +113,7 @@
 }
 
 .aiAssistantButton:hover {
-  background-color: #218838; /* Darker green on hover */
-}
-
-.charCount {
-  margin-left: auto;
-  font-size: 0.8rem;
-  color: #999;
+  background-color: #0d95e8;
 }
 
 /* === Input Groups === */
@@ -168,37 +128,29 @@
   color: #333;
 }
 
-.inputGroup input,
-.inputGroup select,
 .inputGroup textarea {
   padding: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 1rem;
   outline: none;
-}
-
-.inputGroup textarea {
-  width: 100%;
   resize: vertical;
   min-height: 80px;
 }
 
-.inputGroup input:focus,
-.inputGroup select:focus,
 .inputGroup textarea:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+  border-color: #1da1f2;
+  box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.1);
 }
 
-/* === Double Row (Category + Visibility) === */
-.doubleRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+/* Character Count */
+.charCount {
+  font-size: 0.8rem;
+  color: #999;
+  text-align: right;
 }
 
-/* === Schedule Section === */
+/* Schedule Section */
 .scheduleSection {
   display: flex;
   justify-content: space-between;
@@ -249,12 +201,12 @@
 }
 
 .scheduleButton {
-  background: #007bff;
+  background: #1da1f2;
   color: white;
 }
 
 .scheduleButton:hover {
-  background: #0056b3;
+  background: #0d95e8;
 }
 
 .scheduleButton:disabled {
@@ -262,7 +214,7 @@
   cursor: not-allowed;
 }
 
-/* === Messages === */
+/* Messages */
 .successMessage {
   color: #28a745;
   background: #d4edda;
@@ -279,14 +231,14 @@
   margin-top: 1rem;
 }
 
-/* === Video Preview (in upload area) === */
+/* Preview Wrapper */
 .previewWrapper {
   position: relative;
   display: inline-block;
   width: 100%;
 }
 
-.previewVideo {
+.previewMedia {
   width: 100%;
   max-height: 300px;
   border-radius: 10px;
@@ -313,7 +265,7 @@
   background: rgba(255, 0, 0, 0.8);
 }
 
-/* === YouTube Short Preview Panel === */
+/* === Twitter Preview Panel === */
 .previewPanel {
   width: 360px;
   background: white;
@@ -331,84 +283,16 @@
   color: #333;
 }
 
-.shortPreviewContainer {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 9 / 16;
-  background: #000;
+.tweetPreview {
+  background: #f5f8fa;
   border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.shortPreview {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.previewVideoContent {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: black;
-}
-
-.placeholderPreview {
-  color: #aaa;
-  font-size: 14px;
-  text-align: center;
-}
-
-/* Controls on right side */
-.previewControls {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.controlButton {
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.controlButton:hover {
-  background: rgba(0, 0, 0, 0.8);
-}
-
-.controlButton svg {
-  font-size: 18px;
-}
-
-/* Bottom info bar */
-.bottomBar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 12px 14px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.channelInfo {
+.tweetHeader {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -422,43 +306,45 @@
   background: #ddd;
 }
 
-.channelInfo span {
-  color: white;
-  font-size: 14px;
-  font-weight: 500;
+.tweetHeader span {
+  font-weight: 600;
+  color: #333;
 }
 
-.subscribeButton {
-  background: #cc0000;
-  color: white;
-  border: none;
-  border-radius: 16px;
-  padding: 4px 12px;
-  font-size: 12px;
-  cursor: pointer;
-  margin-left: auto;
-}
-
-.videoInfo {
-  color: white;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.videoInfo p {
+.tweetContent p {
   margin: 0;
+  font-size: 14px;
+  color: #0f1419;
 }
 
-.descriptionPreview {
-  font-size: 12px;
-  opacity: 0.85;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;      /* for WebKit browsers */
-  -webkit-box-orient: vertical;
-  line-clamp: 2;              /* standard property for compatibility */
+.previewMediaContent {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 8px;
+  object-fit: cover;
 }
 
+.tweetActions {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 8px;
+  border-top: 1px solid #e1e8ed;
+}
+
+.tweetActions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #657786;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tweetActions button:hover {
+  color: #1da1f2;
+}
 
 .previewButton {
   background: #ffc107;

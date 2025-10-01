@@ -1,6 +1,8 @@
 import React from "react";
 import styles from "../styles/TwitterConnect.module.css";
 import { FaTwitter } from "react-icons/fa";
+import Link from "next/link";
+
 
 const TwitterConnect = () => {
   return (
@@ -43,11 +45,19 @@ const TwitterConnect = () => {
           <p>🚫 We never tweet without your approval</p>
         </div>
 
-        <button className={styles.connectButton}>
-          <FaTwitter />
-          Connect to Twitter
-        </button>
+        <div className={styles.buttonGroup}>
+  <button className={styles.connectButton}>
+    <FaTwitter />
+    Connect to Twitter
+  </button>
 
+  {/* Redirect to TwitterPost page */}
+  <Link href="/TwitterPost" passHref>
+    <button className={styles.dashboardButton}>
+      Go to Twitter Dashboard
+    </button>
+  </Link>
+</div>
         <div className={styles.footerNote}>
           <p>
             By connecting, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
