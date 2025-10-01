@@ -2,15 +2,19 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
-
+import { ConfigService } from '@nestjs/config'; // ✅ Import ConfigService
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable CORS (allow requests from frontend)
+  const configService = app.get(ConfigService); // ✅ Get instance of ConfigService
+  const frontendUrl = configService.get<string>('FRONTEND_URL'); // ✅ Get frontend URL
+  const port = configService.get<number>('PORT'); // ✅ Get port
+
+  // Enable CORS using the environment variable
   app.enableCors({
-    origin: 'https://new-main-repositry.vercel.app', // Frontend URL
-    credentials: true,               // Allows the browser to send and receive cookies
+    origin: frontendUrl, // ✅ Use the variable
+    credentials: true,
   });
 
   // Enables class-validator and class-transformer for all incoming requests
@@ -19,6 +23,7 @@ async function bootstrap() {
   // Enables cookie parsing for all incoming requests
   app.use(cookieParser());
   
-  await app.listen(4000);
+  // Start the application on the port from the environment variable
+  await app.listen(port); // ✅ Use the variable
 }
 bootstrap();
