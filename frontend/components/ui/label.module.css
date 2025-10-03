@@ -1,0 +1,22 @@
+/* frontend/components/ui/label.module.css */
+
+.label-root {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  font-weight: var(--font-weight-medium);
+  user-select: none;
+}
+
+.label-root[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* This targets the label when the associated input/peer is disabled */
+.label-root:has(input[disabled]) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

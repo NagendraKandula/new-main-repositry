@@ -1,0 +1,75 @@
+/* frontend/styles/Publish.module.css */
+
+.createPostPage {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin-top: 64px;
+  font-family: sans-serif;
+  color: #030213; /* Assuming a dark gray for foreground */
+  background-color: #ffffff; /* Assuming a white background */
+}
+
+/* Dark mode styles, assuming your CSS setup handles this */
+.createPostPage.dark {
+  color: #f7f7f8;
+  background-color: #141416;
+}
+
+.header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  padding: 1rem;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mainContent {
+  display: flex;
+  flex: 1; /* This makes the main content fill the available space */
+}
+
+.resizablePanel {
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.channelSelectorPanel {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(236, 236, 240, 0.2);
+}
+
+.contentEditorPanel {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.previewPanel {
+  flex: 2;
+}
+
+.publishingOptionsPanel {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* These styles are a general attempt to match the dark theme colors from your `colors.css` */
+.createPostPage.dark .header {
+  background-color: #141416;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.createPostPage.dark .channelSelectorPanel {
+  background-color: rgba(43, 43, 49, 0.2);
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+.createPostPage.dark .contentEditorPanel {
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+.createPostPage.dark .publishingOptionsPanel {
+  border-left-color: rgba(255, 255, 255, 0.1);
+}

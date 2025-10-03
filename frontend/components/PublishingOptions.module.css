@@ -1,0 +1,99 @@
+/* frontend/components/PublishingOptions.module.css */
+
+.publishingOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tagInputContainer {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tagInput {
+  flex: 1;
+}
+
+.tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tagBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.tagRemoveButton {
+  margin-left: 0.25rem;
+}
+
+.schedulingContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.schedulingInputs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.scheduleButtonContainer {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.scheduleButton {
+  flex: 1;
+}
+
+.timezoneDisplay {
+  padding: 0.75rem;
+  background-color: var(--muted) / 30;
+  border-radius: 0.5rem;
+}
+
+.timezoneContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.publishingButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.publishButton {
+  width: 100%;
+}
+
+.secondaryButtons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.disabledMessage {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  text-align: center;
+}

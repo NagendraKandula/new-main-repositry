@@ -1,0 +1,40 @@
+/* frontend/components/ChannelSelector.module.css */
+
+.channelSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.platformIconList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.platformIcon {
+  position: relative;
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 0 2px transparent; /* Add a transparent box-shadow for smooth transition */
+}
+
+.platformIcon:not(.selected):hover {
+  opacity: 0.8;
+}
+
+.platformIcon.selected {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}

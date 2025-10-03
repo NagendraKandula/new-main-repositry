@@ -1,0 +1,105 @@
+/* frontend/components/MediaManager.module.css */
+
+.mediaManager {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headerTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.mediaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.mediaItem {
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.mediaItem:hover {
+  border-color: var(--muted-foreground);
+}
+
+.mediaItem.selected {
+  border-color: var(--primary);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.mediaPreviewContainer {
+  position: relative;
+  aspect-ratio: 1 / 1;
+}
+
+.mediaPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.videoOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.videoPlayIcon {
+  height: 2rem;
+  width: 2rem;
+  color: #ffffff;
+  fill: #ffffff;
+}
+
+.hoverControls {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.mediaItem:hover .hoverControls {
+  opacity: 1;
+}
+
+.mediaInfo {
+  padding: 0.5rem;
+}
+
+.mediaName {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mediaSize {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+.stockPhotosButton {
+  width: 100%;
+}
