@@ -20,6 +20,28 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+
+  async getTokens(userId: number, email: string) {
+    const payload = { sub: userId, email };
+    const accessToken = this.jwtService.sign(payload,{
+      secret: this.config.get<string>('JWT_SECRET'),
+      expiresIn: '15m',
+    });
+    const refreshToken = this.jwtService.sign(payload,{
+      secret: this.config.get<string>('JWT_REFRESH_SECRET'),
+      expiresIn: '7d',
+    });
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days from now
+    await this.prisma.refreshToken.create({
+      data: {
+        userId,
+        token: refreshToken,
+        expiresAt,
+      },
+    });
+    return { accessToken, refreshToken };
+  }
     
   private async signToken(userId: number, email: string): Promise<string> {
     const payload = { sub: userId, email };
@@ -99,16 +121,58 @@ export class AuthService {
     if (!isMatch) {
       throw new BadRequestException('Invalid credentials');
     }
-    const token = await this.signToken(user.id, user.email);
-    res.cookie('access_token', token, {
+    const tokens = await this.getTokens(user.id, user.email);
+    res.cookie('access_token', tokens.accessToken, {
+      httpOnly: true,
+      secure: this.config.get('NODE_ENV') !== 'development', // Set to true in production (requires HTTPS)
+      sameSite: 'none', // 1 hour
+    });
+    res.cookie('refresh_token',tokens.refreshToken,{
       httpOnly: true,
       secure: this.config.get('NODE_ENV') !== 'development', // Set to true in production (requires HTTPS)
       sameSite: 'none',
-      expires: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour
-    });
+  
+    }
+    );
     return { message: 'Login successful'};
   }
+  async refreshTokens(userId: number, refreshToken: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { refreshTokens: true },
+    });
+    if(!user) {
+      throw new BadRequestException('User not found');
+    }
+    const token = user.refreshTokens.find(
+      (token) => token.token === refreshToken,
+    );  
+    if(!token || token.revoked){
+      throw new BadRequestException('Invalid refresh token');
+    }
+    if(token.expiresAt < new Date()){
+      throw new BadRequestException('Refresh token expired');
+    }
+    const payload = { sub: user.id, email: user.email };
+    const newAccessToken = this.jwtService.sign(payload,{
+      secret: this.config.get<string>('JWT_SECRET'),
+      expiresIn: '15m',
+    });
+    return { accessToken: newAccessToken };
+  }
+  async logout(userId: number, res: Response) {
+  // 1️⃣ Revoke refresh tokens in DB
+  await this.prisma.refreshToken.updateMany({
+    where: { userId, revoked: false },
+    data: { revoked: true },
+  });
 
+  // 2️⃣ Clear cookies
+  res.clearCookie('access_token', { path: '/' });
+  res.clearCookie('refresh_token', { path: '/' });
+
+  return { message: 'Logged out successfully' };
+}
   // FORGOT PASSWORD or RESEND OTP
   async forgotPassword(dto: ForgotPasswordDto) {
     const { email } = dto;
@@ -182,11 +246,7 @@ export class AuthService {
     return this.forgotPassword(dto);
   }
   // LOGOUT
-  async Logout(res : Response){
-    res.clearCookie('access_token' , { path: '/' });
-    return {message : 'Logged out sucessfully'}
-  }
-
+  
  async facebookLogin(req, res: Response) {
     if (!req.user) {
       throw new BadRequestException('No user from facebook');
@@ -210,6 +270,23 @@ export class AuthService {
      const frontendUrl = this.config.get<string>('FRONTEND_URL');
      return res.redirect(`${frontendUrl}/facebook-post`);
   }
+    async youtubeLogin(req, res: Response) {
+    const { accessToken, refreshToken } = req.user;
 
- 
+    // Set tokens in HTTP-only cookies
+    res.cookie('youtube_access_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
+      sameSite: 'none',
+    });
+
+    res.cookie('youtube_refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'none',
+    });
+    // 4. Redirect the user back to your frontend application
+    const frontendUrl = this.config.get<string>('FRONTEND_URL');
+    return res.redirect(`${frontendUrl}/Landing?youtube=connected`);
+  }
 }
