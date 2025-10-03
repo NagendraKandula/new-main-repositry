@@ -208,11 +208,8 @@ export class AuthService {
       });
     }
      const frontendUrl = this.config.get<string>('FRONTEND_URL');
-     return res.redirect(`${frontendUrl}/Landing`);
+     return res.redirect(`${frontendUrl}/facebook-post`);
   }
 
  
-
-
-
 }

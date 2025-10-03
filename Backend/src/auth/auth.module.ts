@@ -11,10 +11,13 @@ import { YoutubeStrategy } from './youtube.strategy';
 import { YoutubeModule } from './youtube/youtube.module'; 
 import { FacebookStrategy } from './facebook.strategy';// <-- Import YoutubeStrategy
 import { LinkedinStrategy } from './linkedin.strategy';
+import { HttpModule } from '@nestjs/axios';
+
 
 @Module({
   imports: [
     PrismaModule,
+    HttpModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

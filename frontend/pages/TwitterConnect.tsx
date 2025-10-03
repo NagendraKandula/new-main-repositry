@@ -1,8 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "../styles/TwitterConnect.module.css";
 import { FaTwitter } from "react-icons/fa";
 
 const TwitterConnect = () => {
+  const [loading, setLoading] = useState(false);
+
+  const handleConnectTwitter = () => {
+    setLoading(true);
+    try {
+      // ✅ Get both frontend and backend URLs from environment variables
+      const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL;
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+      // ✅ Construct the final URL dynamically, just like with LinkedIn
+      const redirectUri = encodeURIComponent(`${frontendUrl}/Landing?twitter=connected`);
+      window.location.href = `${backendUrl}/auth/twitter?redirect=${redirectUri}`;
+
+    } catch (error) {
+      console.error("Connection error:", error);
+      alert("Unable to connect to Twitter. Please try again later.");
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -43,9 +63,13 @@ const TwitterConnect = () => {
           <p>🚫 We never tweet without your approval</p>
         </div>
 
-        <button className={styles.connectButton}>
+        <button
+          className={styles.connectButton}
+          onClick={handleConnectTwitter}
+          disabled={loading}
+        >
           <FaTwitter />
-          Connect to Twitter
+          {loading ? "Connecting..." : "Connect to Twitter"}
         </button>
 
         <div className={styles.footerNote}>

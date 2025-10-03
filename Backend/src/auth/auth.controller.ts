@@ -1,5 +1,5 @@
 // src/auth/auth.controller.ts
-import { Body, Controller, Post, UseGuards, Get, Request, Res, Req } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Get, Request, Res, Req, Scope } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -9,7 +9,6 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config'; 
-
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService,
@@ -101,4 +100,5 @@ export class AuthController {
     // You can create a new service method for this or reuse the googleLogin logic
     return this.authService.facebookLogin(req, res);
   }
+
 }
