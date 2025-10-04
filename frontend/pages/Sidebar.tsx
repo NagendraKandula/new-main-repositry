@@ -8,14 +8,34 @@ import {
   FaRegLightbulb,
 } from "react-icons/fa";
 import styles from "../styles/sidebar.module.css";
+import { cn } from "../utils";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+
+const TooltipProvider = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) => {
+  return <TooltipPrimitive.Provider {...props} />;
+};
+
+const Tooltip = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Root>) => {
+  return <TooltipPrimitive.Root {...props} />;
+};
+
+const TooltipTrigger = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) => {
+  return <TooltipPrimitive.Trigger {...props} />;
+};
+
+const TooltipContent = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Content>) => {
+  return <TooltipPrimitive.Content {...props} />;
+};
 
 interface SidebarProps {
   activeSegment: string;
   setActiveSegment: (segment: string) => void;
   activePlatform: string | null;
+  // Add the new prop
+  setActivePlatform: (platform: string | null) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, activePlatform }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, activePlatform, setActivePlatform }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   const segments = [
@@ -29,9 +49,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, acti
 
   const handleClick = (name: string) => {
     setActiveSegment(name);
+    // Add this line to reset the active platform
+    setActivePlatform(null);
   };
-
-  // ✅ REMOVED: if (activePlatform) return null; — Sidebar now always visible
 
   return (
     <>
@@ -40,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, acti
           {segments.map((s) => (
             <button
               key={s.name}
-              className={`${styles.segment} ${activeSegment === s.name ? styles.active : ""}`}
+              className={`${styles.segment} ${activeSegment === s.name && !activePlatform ? styles.active : ""}`}
               onClick={() => handleClick(s.name)}
               aria-label={s.name}
             >

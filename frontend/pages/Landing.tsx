@@ -20,6 +20,7 @@ import TwitterPost from "./TwitterPost";
 import LinkedInConnect from "./LinkedInConnect";
 import PinterestConnect from "./PinterestConnect";
 import ThreadsConnect from "./ThreadsConnect";
+import FacebookPost from "./facebook-post";
 
 const Landing = () => {
   const router = useRouter();
@@ -51,6 +52,8 @@ const Landing = () => {
         case "twitter":
           return twitterConnected ? <TwitterPost /> : <TwitterConnect />;
         case "instagram":
+          // Assuming you have a way to check if Instagram is connected
+          // For now, let's assume it's always the connect page
           return <InstagramConnect />;
         case "facebook":
           return <FacebookConnect />;
@@ -94,6 +97,7 @@ const Landing = () => {
           activeSegment={activeSegment}
           setActiveSegment={setActiveSegment}
           activePlatform={activePlatform}
+          setActivePlatform={setActivePlatform} // <-- Pass the setActivePlatform function here
         />
         <main className={styles.content}>{renderContent()}</main>
       </div>

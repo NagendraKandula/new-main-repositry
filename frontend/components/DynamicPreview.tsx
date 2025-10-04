@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { cn } from "../utils";
 import styles from "./DynamicPreview.module.css";
+import { MobileFrame } from "./MobileFrame"; // Import the new component
 
 // Type definitions for Media and Text elements
 interface MediaItem {
@@ -163,11 +164,11 @@ export function DynamicPreview({
         <div className="p-4">
           <p className="text-sm leading-relaxed">{content}</p>
           {firstMedia && (
-            <div className="relative mt-4 mx-auto w-[400px] h-[300px] flex items-center justify-center">
+            <div className="relative mt-4 flex items-center justify-center">
               {firstMedia.type === 'video' ? (
-                <video src={firstMedia.url} controls className="w-full h-full object-cover rounded-md" />
+                <video src={firstMedia.url} controls className="max-w-full max-h-[300px] object-contain rounded-md" />
               ) : (
-                <img src={firstMedia.url} alt="Post media" className="w-full h-full object-cover rounded-md" />
+                <img src={firstMedia.url} alt="Post media" className="max-w-full max-h-[300px] object-contain rounded-md" />
               )}
               <Button
                   size="sm"
@@ -205,11 +206,11 @@ export function DynamicPreview({
         <div className="p-4">
           <p className="text-sm leading-relaxed">{content}</p>
           {firstMedia && (
-              <div className="relative mt-4 mx-auto w-[400px] h-[300px] flex items-center justify-center">
+              <div className="relative mt-4 flex items-center justify-center">
                 {firstMedia.type === 'video' ? (
-                  <video key={firstMedia.id} src={firstMedia.url} controls className="w-full h-full object-cover rounded-md" />
+                  <video key={firstMedia.id} src={firstMedia.url} controls className="max-w-full max-h-[300px] object-contain rounded-md" />
                 ) : (
-                  <img key={firstMedia.id} src={firstMedia.url} alt="Post media" className="w-full h-full object-cover rounded-md" />
+                  <img key={firstMedia.id} src={firstMedia.url} alt="Post media" className="max-w-full max-h-[300px] object-contain rounded-md" />
                 )}
                 <Button
                     size="sm"
@@ -247,11 +248,11 @@ export function DynamicPreview({
         <div className="p-4">
           <p className="text-sm leading-relaxed">{content}</p>
           {firstMedia && (
-            <div className="relative mt-4 mx-auto w-[400px] h-[300px] flex items-center justify-center">
+            <div className="relative mt-4 flex items-center justify-center">
               {firstMedia.type === 'video' ? (
-                <video key={firstMedia.id} src={firstMedia.url} controls className="w-full h-full object-cover rounded-md" />
+                <video key={firstMedia.id} src={firstMedia.url} controls className="max-w-full max-h-[300px] object-contain rounded-md" />
               ) : (
-                <img key={firstMedia.id} src={firstMedia.url} alt="Post media" className="w-full h-full object-cover rounded-md" />
+                <img key={firstMedia.id} src={firstMedia.url} alt="Post media" className="max-w-full max-h-[300px] object-contain rounded-md" />
               )}
               <Button
                   size="sm"
@@ -280,11 +281,11 @@ export function DynamicPreview({
     return (
       <div className={styles.previewBody}>
         {firstMedia && (
-          <div className="relative mx-auto w-[400px] h-[400px] flex items-center justify-center">
+          <div className="relative mx-auto max-w-[400px] h-[400px] flex items-center justify-center">
             {firstMedia.type === 'video' ? (
-              <video src={firstMedia.url} controls muted playsInline className="w-full h-full object-cover" />
+              <video src={firstMedia.url} controls muted playsInline className="max-w-full max-h-full object-contain" />
             ) : (
-              <img src={firstMedia.url} alt="Post media" className="w-full h-full object-cover" />
+              <img src={firstMedia.url} alt="Post media" className="max-w-full max-h-full object-contain" />
             )}
             {isVideo && (
               <div className="absolute inset-0 flex items-center justify-center">
@@ -323,11 +324,11 @@ export function DynamicPreview({
     return (
       <div className={styles.previewBody}>
         {firstMedia && (
-          <div className="relative w-full h-[500px] max-w-sm mx-auto">
+          <div className="relative w-full h-[500px] max-w-sm mx-auto flex items-center justify-center">
             {firstMedia.type === 'video' ? (
-              <video src={firstMedia.url} controls muted playsInline className="w-full h-full object-cover" />
+              <video src={firstMedia.url} controls muted playsInline className="max-w-full max-h-full object-contain" />
             ) : (
-              <img src={firstMedia.url} alt="Post media" className="w-full h-full object-cover" />
+              <img src={firstMedia.url} alt="Post media" className="max-w-full max-h-full object-contain" />
             )}
             {isVideo && (
               <div className="absolute inset-0 flex items-center justify-center">
@@ -385,11 +386,11 @@ export function DynamicPreview({
           </div>
         </div>
         {firstMedia ? (
-          <div className="relative mx-auto w-[400px] h-[300px] flex items-center justify-center">
+          <div className="relative mx-auto flex items-center justify-center mt-4">
             {firstMedia.type === 'video' ? (
-                <video key={firstMedia.id} src={firstMedia.url} controls className="w-full h-full object-cover rounded-md" />
+                <video key={firstMedia.id} src={firstMedia.url} controls className="max-w-full max-h-[300px] object-contain rounded-md" />
               ) : (
-                <img key={firstMedia.id} src={firstMedia.url} alt="Post media" className="w-full h-full object-cover rounded-md" />
+                <img key={firstMedia.id} src={firstMedia.url} alt="Post media" className="max-w-full max-h-[300px] object-contain rounded-md" />
               )}
             <Button
                 size="sm"
@@ -446,7 +447,11 @@ export function DynamicPreview({
         <Badge variant="secondary">{activePlatforms.length} platform{activePlatforms.length !== 1 ? 's' : ''}</Badge>
       </div>
       {activePlatforms.length === 1 ? (
-        <div className={styles.previewContainer}>{renderPlatformPreview(activePlatforms[0].id)}</div>
+        <div className={cn(styles.previewContainer, "flex items-center justify-center")}>
+          <MobileFrame platform={activePlatforms[0].id}>
+            {renderPlatformPreview(activePlatforms[0].id)}
+          </MobileFrame>
+        </div>
       ) : (
         <Tabs defaultValue={activePlatforms[0].id} className={styles.tabsContainer}>
           <TabsList className={cn(styles.tabsList, `grid-cols-${activePlatforms.length <= 6 ? activePlatforms.length : 6}`)}>
@@ -457,8 +462,10 @@ export function DynamicPreview({
             ))}
           </TabsList>
           {activePlatforms.map((platform) => (
-            <TabsContent key={platform.id} value={platform.id} className={styles.tabsContent}>
-              {renderPlatformPreview(platform.id)}
+            <TabsContent key={platform.id} value={platform.id} className={cn(styles.tabsContent, "flex items-center justify-center")}>
+              <MobileFrame platform={platform.id}>
+                {renderPlatformPreview(platform.id)}
+              </MobileFrame>
             </TabsContent>
           ))}
         </Tabs>

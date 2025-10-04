@@ -12,6 +12,9 @@ import { DynamicPreview } from "../components/DynamicPreview";
 import { PublishingOptions } from "../components/PublishingOptions";
 import styles from "../styles/Publish.module.css";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
+import { X as CloseIcon } from "lucide-react";
+
 
 // Defining types needed for the page
 interface MediaItem {
@@ -69,6 +72,10 @@ const Publish = () => {
   }]);
   const [textElements, setTextElements] = useState<TextElement[]>([]);
   const [selectedMedia, setSelectedMedia] = useState<string | undefined>();
+  // New state for the modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMedia, setModalMedia] = useState<MediaItem | null>(null);
+
 
   const handleChannelToggle = (channelId: string) => {
     setSelectedChannels(prev =>
@@ -145,6 +152,12 @@ const Publish = () => {
     toast.success("Draft saved successfully");
   };
 
+  // Function to open the modal
+  const handleMediaClick = (media: MediaItem) => {
+    setModalMedia(media);
+    setIsModalOpen(true);
+  };
+
   return (
     <TooltipProvider>
       <div className={cn(styles.createPostPage, "h-screen")}>
@@ -182,6 +195,7 @@ const Publish = () => {
               onEditMedia={handleEditMedia}
               selectedMedia={selectedMedia}
               onSelectMedia={setSelectedMedia}
+              onMediaClick={handleMediaClick}
             />
           </ResizablePanel>
           <ResizableHandle withHandle />
@@ -208,6 +222,41 @@ const Publish = () => {
         </ResizablePanelGroup>
       </div>
       <Toaster position="bottom-center" />
+      
+      {/* The Pop-up Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-[800px] p-0 overflow-hidden">
+          {modalMedia && (
+            <>
+              <div className="relative w-full h-[500px] bg-black flex items-center justify-center">
+                <div className="flex items-center justify-center w-full h-full">
+                  {modalMedia.type === 'video' ? (
+                    <video src={modalMedia.url} controls className="max-w-full max-h-full object-contain" />
+                  ) : (
+                    <img src={modalMedia.url} alt={modalMedia.name} className="max-w-full max-h-full object-contain" />
+                  )}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-2 right-2 text-white hover:text-gray-300"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  <CloseIcon className="h-6 w-6" />
+                </Button>
+              </div>
+              <div className="p-4">
+                <DialogHeader>
+                  <DialogTitle>{modalMedia.name}</DialogTitle>
+                  <DialogDescription>
+                    File size: {modalMedia.size}
+                  </DialogDescription>
+                </DialogHeader>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </TooltipProvider>
   );
 };

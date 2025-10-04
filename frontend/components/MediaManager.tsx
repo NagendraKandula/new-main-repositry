@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { ImageWithFallback } from "../ImageWithFallback";
@@ -21,6 +21,7 @@ interface MediaManagerProps {
   onEditMedia: (id: string) => void;
   selectedMedia?: string;
   onSelectMedia: (id: string) => void;
+  onMediaClick: (item: MediaItem) => void;
 }
 
 export function MediaManager({
@@ -28,13 +29,19 @@ export function MediaManager({
   onRemoveMedia,
   onEditMedia,
   selectedMedia,
-  onSelectMedia
+  onSelectMedia,
+  onMediaClick
 }: MediaManagerProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   if (mediaItems.length === 0) {
     return null;
   }
+
+  const handleItemClick = (item: MediaItem) => {
+    onSelectMedia(item.id);
+    onMediaClick(item);
+  };
 
   return (
     <div className={styles.mediaManager}>
@@ -49,7 +56,7 @@ export function MediaManager({
             className={cn(styles.mediaItem, { [styles.selected]: selectedMedia === item.id })}
             onMouseEnter={() => setHoveredItem(item.id)}
             onMouseLeave={() => setHoveredItem(null)}
-            onClick={() => onSelectMedia(item.id)}
+            onClick={() => handleItemClick(item)}
           >
             <div className={styles.mediaPreviewContainer}>
               <ImageWithFallback
@@ -103,9 +110,6 @@ export function MediaManager({
           </div>
         ))}
       </div>
-      <Button variant="outline" size="sm" className={styles.stockPhotosButton}>
-        Browse Stock Photos
-      </Button>
     </div>
   );
 }
