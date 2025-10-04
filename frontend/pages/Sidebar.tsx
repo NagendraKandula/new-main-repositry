@@ -8,8 +8,8 @@ import {
   FaRegLightbulb,
 } from "react-icons/fa";
 import styles from "../styles/sidebar.module.css";
-import { cn } from "../utils";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import { cn } from "utils";
 
 const TooltipProvider = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) => {
   return <TooltipPrimitive.Provider {...props} />;
