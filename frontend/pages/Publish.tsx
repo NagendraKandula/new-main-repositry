@@ -9,7 +9,6 @@ import { ChannelSelector } from "../components/ChannelSelector";
 import { ContentEditor } from "../components/ContentEditor";
 import { MediaManager } from "../components/MediaManager";
 import { DynamicPreview } from "../components/DynamicPreview";
-import { PublishingOptions } from "../components/PublishingOptions";
 import styles from "../styles/Publish.module.css";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
@@ -52,7 +51,7 @@ const Toaster = ({ ...props }) => {
     return <Sonner {...props} />;
 };
 
-const sampleImage = "https://images.unsplash.com/photo-1614455774841-d7e9135c58b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cm9waWNhbCUyMGJlYWNoJTIwcGFsbSUyMHRyZWVzJTIwc3VtbWVyfGVufDF8fHx8MTc1OTQ3MzQ2Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
+const sampleImage = "https://images.unsplash.com/photo-1614455774841-d7e9135c58b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cm9waWNhbCUyMGJlYWNoJTIwcGFsbSUyMHRyZWUlMjBzdW1tZXJ8ZW58MXx8fHwxfDE3NTk0NzM0NjJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
 
 const Publish = () => {
   const [selectedChannels, setSelectedChannels] = useState<string[]>(['twitter', 'facebook', 'instagram']);
@@ -144,8 +143,8 @@ const Publish = () => {
     toast.success(`Post published to ${selectedChannels.length} platforms!`);
   };
 
-  const handleSchedule = (date: string, time: string) => {
-    toast.success(`Post scheduled for ${date} at ${time}`);
+  const handleSchedule = () => {
+    toast.success(`Post scheduled`);
   };
 
   const handleSaveDraft = () => {
@@ -161,25 +160,8 @@ const Publish = () => {
   return (
     <TooltipProvider>
       <div className={cn(styles.createPostPage, "h-screen")}>
-        <div className={styles.header}>
-          <div className={styles.headerContent}>
-            <h1 className="text-xl">Create Post</h1>
-            <div className="flex items-center space-x-3">
-              <Button variant="outline" size="sm">
-                <Badge variant="outline" className="mr-2">Add Tags</Badge>
-              </Button>
-              <Badge variant="outline" className="flex items-center space-x-2">
-                <span>Draft</span>
-                <X className="h-3 w-3 cursor-pointer" />
-              </Badge>
-              <Button variant="outline" size="sm" onClick={handleSaveDraft}>
-                Save Draft
-              </Button>
-            </div>
-          </div>
-        </div>
         <ResizablePanelGroup direction="horizontal" className={styles.mainContent}>
-          <ResizablePanel defaultSize={30} minSize={25} maxSize={40} className={cn(styles.resizablePanel, styles.contentEditorPanel)}>
+          <ResizablePanel defaultSize={40} minSize={30}>
             <ContentEditor
               selectedChannels={selectedChannels}
               onChannelToggle={handleChannelToggle}
@@ -199,7 +181,7 @@ const Publish = () => {
             />
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={40} className={cn(styles.resizablePanel, styles.previewPanel)}>
+          <ResizablePanel defaultSize={60} minSize={50} className={cn(styles.resizablePanel, styles.previewPanel)}>
             <DynamicPreview
               selectedChannels={selectedChannels}
               content={content}
@@ -209,15 +191,20 @@ const Publish = () => {
               onUpdateText={handleUpdateText}
               onRemoveElement={handleRemoveElement}
             />
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={15} minSize={10} maxSize={20} className={cn(styles.resizablePanel, styles.publishingOptionsPanel)}>
-            <PublishingOptions
-              selectedChannels={selectedChannels}
-              onPublish={handlePublish}
-              onSchedule={handleSchedule}
-              onSaveDraft={handleSaveDraft}
-            />
+            <div className="flex items-center justify-center p-4 space-x-4 border-t border-gray-200 dark:border-gray-800">
+              <Button onClick={handlePublish} className="w-1/3" disabled={selectedChannels.length === 0}>
+                <Send className="h-4 w-4 mr-2" />
+                Publish
+              </Button>
+              <Button variant="outline" onClick={handleSaveDraft} className="w-1/3">
+                <Save className="h-4 w-4 mr-2" />
+                Save Draft
+              </Button>
+              <Button variant="outline" onClick={handleSchedule} className="w-1/3" disabled={selectedChannels.length === 0}>
+                <Clock className="h-4 w-4 mr-2" />
+                Schedule Post
+              </Button>
+            </div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>

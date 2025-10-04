@@ -9,7 +9,7 @@ export function MobileFrame({ children, platform }: MobileFrameProps) {
   return (
     <div
       className={cn(
-        "relative w-[380px] h-[680px] rounded-[3rem] shadow-2xl transition-all duration-300 ease-in-out z-10",
+        "relative w-full h-full rounded-[3rem] shadow-2xl transition-all duration-300 ease-in-out z-10",
         "border-[10px] border-[#111] bg-[#333]",
         {
           "border-[#222] rounded-[3.5rem] shadow-[0_0_0_1px_rgba(255,255,255,0.2),0_0_0_10px_#222]": platform === 'instagram' || platform === 'threads',

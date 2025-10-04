@@ -4,13 +4,19 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #f7f7f8;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
 }
 
+/* Updated header to match the Figma image */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
 }
 
 .headerTitle {
@@ -104,12 +110,31 @@
 }
 
 .tabsList {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: #f7f7f8;
+  border-bottom: 1px solid #dcdcdc;
 }
 
 .tabsContent {
   height: calc(100% - 2.5rem);
   margin-top: 1rem;
+}
+
+/* Specific styles for the new action bar */
+.actionButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+  background-color: #ffffff;
+}
+
+.publishButton,
+.saveDraftButton,
+.scheduleButton {
+  width: 30%;
 }
