@@ -1,5 +1,5 @@
 // src/auth/auth.controller.ts
-import { Body, Controller, Post, UseGuards, Get, Request, Res, Req, Scope, HttpCode, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Get, Request, Res, Req, Scope, HttpCode, HttpStatus,BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -10,6 +10,7 @@ import { JwtRefreshGuard } from './jwt-refresh.guard';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config'; 
+//import {  YoutubeAuthGuard} from './youtube-auth.guard';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService,
@@ -78,23 +79,47 @@ export class AuthController {
   }
   @UseGuards(JwtAuthGuard)
 @Post('logout')
+@UseGuards(JwtAuthGuard)
 @HttpCode(HttpStatus.OK)
 async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
   const userId = req.user.id;
   return this.authService.logout(userId, res);
 }
-
+  
   @Get('youtube')
-  @UseGuards(JwtAuthGuard,AuthGuard('youtube'))
-  async youtubeAuth(@Req() req) {
+  @UseGuards(JwtAuthGuard)
+  async redirectToYoutube(@Req() req,@Res() res: Response) {
+    const userId = req.user.userId;
+    const state = encodeURIComponent(JSON.stringify({ userId }));
+     const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+                   `client_id=${process.env.YOUTUBE_CLIENT_ID}` +
+                   `&redirect_uri=${encodeURIComponent(process.env.YOUTUBE_CALLBACK_URL!)}` +
+                   `&response_type=code` +
+                   `&scope=${encodeURIComponent('https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload')}` +
+                   `&access_type=offline` +
+                   `&prompt=consent` +
+                   `&state=${state}`;
+     return res.redirect(oauthUrl);
+
     // This route is never hit directly because the guard redirects to YouTube
   }
 
   @Get('youtube/callback')
   @UseGuards(AuthGuard('youtube'))
-  youtubeAuthRedirect(@Req() req, @Res() res: Response) {
-    // The 'user' object is attached by the YoutubeStrategy's validate function
-    return this.authService.youtubeLogin(req,res); // Or any other page
+  async youtubeAuthRedirect(@Req() req, @Res() res: Response) {
+    
+    const { accessToken, refreshToken, youtubeId, displayName } = req.user;
+
+  // Extract app user from state
+  const state = JSON.parse(decodeURIComponent(req.query.state as string));
+  const appUserId = state.userId;
+
+  if (!appUserId) {
+    throw new BadRequestException('App user not found in state');
+  }
+
+  // Call service to link YouTube account
+  return this.authService.youtubeLogin(req, res, appUserId);
   }
   @Get('facebook')
   @UseGuards(AuthGuard('facebook'))

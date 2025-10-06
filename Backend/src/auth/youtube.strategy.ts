@@ -13,7 +13,8 @@ export class YoutubeStrategy extends PassportStrategy(Strategy, 'youtube') {
       clientSecret: configService.get<string>('YOUTUBE_CLIENT_SECRET'),
       callbackURL:  configService.get<string>('YOUTUBE_CALLBACK_URL'),
       scope: ['https://www.googleapis.com/auth/youtube.readonly',
-              'https://www.googleapis.com/auth/youtube.upload'
+              'https://www.googleapis.com/auth/youtube.upload',
+              'https://www.googleapis.com/auth/yt-analytics.readonly' 
 
       ],
       prompt: 'consent',
@@ -29,12 +30,12 @@ export class YoutubeStrategy extends PassportStrategy(Strategy, 'youtube') {
   ): Promise<any> {
     // In this strategy, we are not creating a user or storing tokens in the DB.
     // We are simply validating the user and passing the tokens along.
-    const user = {
+    const youtubeUser = {
       youtubeId: profile.id,
       displayName: profile.displayName,
       accessToken, // Pass the tokens to the request object
       refreshToken,
     };
-    done(null, user);
+    done(null, youtubeUser);
   }
 }

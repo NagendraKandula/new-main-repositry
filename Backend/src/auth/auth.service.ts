@@ -270,9 +270,47 @@ export class AuthService {
      const frontendUrl = this.config.get<string>('FRONTEND_URL');
      return res.redirect(`${frontendUrl}/facebook-post`);
   }
-    async youtubeLogin(req, res: Response) {
-    const { accessToken, refreshToken } = req.user;
+    async youtubeLogin(req, res: Response,appUserId: number) {
+      //step1:get youtbe info from req.user strategy
+    const { accessToken, refreshToken,youtubeId,displayName } = req.user;
+    //step 2: Get curently logged in app user
 
+    if (!appUserId) {
+      throw new BadRequestException('App user not found .please log in first');
+    }
+    // check if youtbe account already eixst
+    const existingYoutube = await this.prisma.socialAccount.findUnique({
+      where:{
+        provider_providerId:{
+          providerId: youtubeId,
+          provider: 'youtube',
+        },
+      },
+    });
+    if(existingYoutube){
+      await this.prisma.socialAccount.update({
+        where:{ id: existingYoutube.id },
+        data:{
+          accessToken,
+          refreshToken,
+          updatedAt: new Date(),
+          expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+          userId : appUserId, // 1 hour from now
+        },
+      });
+    }
+    else{
+      await this.prisma.socialAccount.create({
+        data:{  
+          provider: 'youtube',
+          providerId: youtubeId,
+          accessToken,  
+          refreshToken,
+          userId: appUserId,
+          expiresAt: new Date(Date.now() + 60 * 60 * 1000), 
+        },
+      });
+    }
     // Set tokens in HTTP-only cookies
     res.cookie('youtube_access_token', accessToken, {
       httpOnly: true,
