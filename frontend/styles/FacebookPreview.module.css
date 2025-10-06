@@ -1,0 +1,23 @@
+.container {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 500px;
+  margin: 20px auto;
+  background-color: #fff;
+}
+
+.content {
+  font-size: 14px;
+  color: #333;
+}
+
+.mediaContainer {
+  margin-top: 10px;
+}
+
+.mediaItem {
+  width: 100%;
+  border-radius: 4px;
+  margin-top: 8px;
+}

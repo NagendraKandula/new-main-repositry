@@ -1,121 +1,118 @@
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { MobilePreview } from "./MobilePreview";
-import { 
-  Send,
-  Save,
-  Clock
-} from "lucide-react";
-
-interface MediaItem {
-  id: string;
-  type: 'image' | 'video';
-  url: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  rotation: number;
-}
-
-interface TextElement {
-  id: string;
-  content: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  fontSize: number;
-  color: string;
-  alignment: 'left' | 'center' | 'right';
-}
+import React, { useState } from "react";
+import styles from "../styles/DynamicPreview.module.css";
+import { Send, Save, Clock } from "lucide-react";
 
 interface DynamicPreviewProps {
-  selectedChannels: string[];
-  content: string;
-  mediaItems: MediaItem[];
-  textElements: TextElement[];
-  onUpdateMedia: (id: string, updates: Partial<MediaItem>) => void;
-  onUpdateText: (id: string, updates: Partial<TextElement>) => void;
-  onRemoveElement: (id: string, type: 'media' | 'text') => void;
+  selectedPlatforms: string[];
+  content: string; // ← NEW: accept real content
+  mediaFiles: File[]; // ← NEW: accept media
   onPublish: () => void;
   onSaveDraft: () => void;
-  onSchedulePost: () => void;
-  instagramContentType?: 'post' | 'reel' | 'story';
-  firstComment?: string;
+  onSchedule: () => void;
 }
 
-export function DynamicPreview({
-  selectedChannels,
-  content,
-  mediaItems,
-  textElements,
-  onUpdateMedia,
-  onUpdateText,
-  onRemoveElement,
+// Mock platform data for demo
+const PLATFORM_CONFIG = {
+  Facebook: { color: "#1877f2", icon: "📘" },
+  Twitter: { color: "#000000", icon: "🐦" },
+  Instagram: { color: "#E1306C", icon: "📸" },
+  LinkedIn: { color: "#0a66c2", icon: "💼" },
+  Pinterest: { color: "#bd081c", icon: "📌" },
+};
+
+export default function DynamicPreview({
+  selectedPlatforms,
+  content = "Embracing those perfect summer vibes! 🌴☀️ #SummerVibes",
+  mediaFiles = [],
   onPublish,
   onSaveDraft,
-  onSchedulePost,
-  instagramContentType = 'post',
-  firstComment
+  onSchedule,
 }: DynamicPreviewProps) {
+  const [activePlatform, setActivePlatform] = useState<string>(
+    selectedPlatforms[0] || "Facebook"
+  );
 
+  const platform = PLATFORM_CONFIG[activePlatform as keyof typeof PLATFORM_CONFIG] || PLATFORM_CONFIG.Facebook;
 
+  // For demo: show first image if available
+  const previewImage = mediaFiles.length > 0 && mediaFiles[0].type.startsWith("image/")
+    ? URL.createObjectURL(mediaFiles[0])
+    : "/summer-beach.jpg";
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <h3>Mobile Preview</h3>
-        <Badge variant="secondary">
-          {selectedChannels.length} platform{selectedChannels.length !== 1 ? 's' : ''}
-        </Badge>
+    <div className={styles.previewContainer}>
+      {/* Header */}
+      <div className={styles.previewHeader}>
+        <h2 className={styles.previewTitle}>Mobile Preview</h2>
+        <div className={styles.platformCount}>
+          {selectedPlatforms.length} platform{selectedPlatforms.length !== 1 ? "s" : ""}
+        </div>
       </div>
 
-      <div className="flex-1 min-h-0">
-        <MobilePreview
-          selectedChannels={selectedChannels}
-          content={content}
-          mediaItems={mediaItems}
-          instagramContentType={instagramContentType}
-          firstComment={firstComment}
-        />
-      </div>
-      
-      {/* Action Bar */}
-      <div className="mt-4 p-4 border-t bg-muted/10 rounded-b-lg">
-        <div className="flex items-center justify-center space-x-3">
-          <Button 
-            onClick={onPublish}
-            disabled={selectedChannels.length === 0}
-            className="flex-1 max-w-32"
-          >
-            <Send className="h-4 w-4 mr-2" />
-            Publish
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={onSaveDraft}
-            className="flex-1 max-w-32"
-          >
-            <Save className="h-4 w-4 mr-2" />
-            Save Draft
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={onSchedulePost}
-            disabled={selectedChannels.length === 0}
-            className="flex-1 max-w-32"
-          >
-            <Clock className="h-4 w-4 mr-2" />
-            Schedule
-          </Button>
+      {/* Platform Tabs */}
+      {selectedPlatforms.length > 1 && (
+        <div className={styles.platformTabs}>
+          {selectedPlatforms.map((plat) => (
+            <button
+              key={plat}
+              className={`${styles.tab} ${activePlatform === plat ? styles.activeTab : ""}`}
+              onClick={() => setActivePlatform(plat)}
+              style={{ borderColor: PLATFORM_CONFIG[plat as keyof typeof PLATFORM_CONFIG]?.color || "#9CA3AF" }}
+            >
+              {PLATFORM_CONFIG[plat as keyof typeof PLATFORM_CONFIG]?.icon || plat[0]}
+            </button>
+          ))}
         </div>
-        {selectedChannels.length === 0 && (
-          <p className="text-xs text-muted-foreground text-center mt-2">
-            Select at least one platform to publish or schedule
-          </p>
-        )}
+      )}
+
+      {/* Mobile Preview Area */}
+      <div className={styles.phoneWrapper}>
+        <div className={styles.phone}>
+          <div className={styles.screen}>
+            <div className={styles.postHeader}>
+              <div
+                className={styles.postLogo}
+                style={{ backgroundColor: platform.color }}
+              >
+                {platform.icon}
+              </div>
+              <div className={styles.postInfo}>
+                <p className={styles.postPlatform}>{activePlatform}</p>
+                <span className={styles.postTime}>Just now</span>
+              </div>
+            </div>
+            <div className={styles.postContent}>
+              <p>{content || "Write your caption..."}</p>
+              {mediaFiles.length > 0 && (
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className={styles.postImage}
+                  onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)} // cleanup
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Controls */}
+      <div className={styles.controls}>
+        <button
+          className={`${styles.controlButton} ${styles.publishButton}`}
+          onClick={onPublish}
+        >
+          <Send className={styles.icon} />
+          Publish
+        </button>
+        <button className={styles.controlButton} onClick={onSaveDraft}>
+          <Save className={styles.icon} />
+          Save Draft
+        </button>
+        <button className={styles.controlButton} onClick={onSchedule}>
+          <Clock className={styles.icon} />
+          Schedule
+        </button>
       </div>
     </div>
   );

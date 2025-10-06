@@ -1,78 +1,95 @@
-import React from "react";
-import Image from "next/image";
-import { Button } from "./ui/button";
-import { Twitter, Facebook, Instagram, Linkedin } from "lucide-react";
+import React, { useState } from 'react';
+import {
+  FaTwitter,
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaPinterest,
+  FaYoutube,
+} from 'react-icons/fa';
+import { SiThreads } from 'react-icons/si';
+import styles from '../styles/ChannelSelector.module.css';
 
-// Local icon imports
-import threadsIcon from "/public/threads.png";
-import twitterIcon from "/public/twitter.png";
-import pinterestIcon from "/public/pinterest.png";
+type Channel =
+  | 'twitter'
+  | 'facebook'
+  | 'instagram'
+  | 'linkedin'
+  | 'pinterest'
+  | 'youtube'
+  | 'threads';
 
-interface Platform {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  color: string;
-}
+const channels: Channel[] = ['twitter', 'facebook', 'instagram', 'linkedin', 'pinterest', 'youtube', 'threads'];
 
-// Custom Threads Icon Component
-const ThreadsIcon = ({ className }: { className?: string }) => (
-  <Image src={threadsIcon} alt="Threads" width={22} height={22} className={`${className} object-contain`} />
-);
+const ChannelIcon: Record<Channel, JSX.Element> = {
+  twitter: <FaTwitter size={20} />,
+  facebook: <FaFacebook size={23} />,
+  instagram: <FaInstagram size={24} />,
+  linkedin: <FaLinkedin size={23} />,
+  pinterest: <FaPinterest size={23} />,
+  youtube: <FaYoutube size={23} />,
+  threads: <SiThreads size={20} />,
+};
 
-// Custom Twitter/X Icon Component
-const TwitterIcon = ({ className }: { className?: string }) => (
-  <Image src={twitterIcon} alt="Twitter/X" width={22} height={22} className={`${className} object-contain`} />
-);
+const ChannelStyle: Record<Channel, string> = {
+  twitter: styles.twitter,
+  facebook: styles.facebook,
+  instagram: styles.instagram,
+  linkedin: styles.linkedin,
+  pinterest: styles.pinterest,
+  youtube: styles.youtube,
+  threads: styles.threads,
+};
 
-// Custom Pinterest Icon Component
-const PinterestIcon = ({ className }: { className?: string }) => (
-  <Image src={pinterestIcon} alt="Pinterest" width={22} height={22} className={`${className} object-contain`} />
-);
+export default function ChannelSelector() {
+  const [selectedChannels, setSelectedChannels] = useState<Set<Channel>>(new Set());
 
-const platforms: Platform[] = [
-  { id: "twitter", name: "Twitter", icon: <TwitterIcon className="h-[22px] w-[22px]" />, color: "bg-black" },
-  { id: "facebook", name: "Facebook", icon: <Facebook className="h-[22px] w-[22px]" />, color: "bg-blue-600" },
-  { id: "instagram", name: "Instagram", icon: <Instagram className="h-[22px] w-[22px]" />, color: "bg-gradient-to-r from-purple-500 via-red-500 to-yellow-500" },
-  { id: "linkedin", name: "LinkedIn", icon: <Linkedin className="h-[22px] w-[22px]" />, color: "bg-blue-700" },
-  { id: "threads", name: "Threads", icon: <ThreadsIcon className="h-[22px] w-[22px]" />, color: "bg-black dark:bg-white" },
-  { id: "pinterest", name: "Pinterest", icon: <PinterestIcon className="h-[22px] w-[22px]" />, color: "bg-red-600" },
-];
+  const toggleChannel = (channel: Channel) => {
+    const newSelected = new Set(selectedChannels);
+    if (newSelected.has(channel)) {
+      newSelected.delete(channel);
+    } else {
+      newSelected.add(channel);
+    }
+    setSelectedChannels(newSelected);
+  };
 
-interface ChannelSelectorProps {
-  selectedChannels: string[];
-  onChannelToggle: (channelId: string) => void;
-  onSelectAll: () => void;
-}
-
-export function ChannelSelector({ selectedChannels, onChannelToggle, onSelectAll }: ChannelSelectorProps) {
-  const allSelected = selectedChannels.length === platforms.length;
+  const toggleSelectAll = () => {
+    if (selectedChannels.size === channels.length) {
+      setSelectedChannels(new Set());
+    } else {
+      setSelectedChannels(new Set(channels));
+    }
+  };
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Select Channels</h3>
+    <div className={styles.container}>
+      {/* Single horizontal line container */}
+      <div className={styles.horizontalWrapper}>
+        {/* Title */}
+        <h2 className={styles.title}>Select Channels</h2>
 
-      <div className="flex gap-2 overflow-x-auto">
-        {platforms.map((platform) => (
-          <div
-            key={platform.id}
-            className={`p-2 rounded-lg cursor-pointer flex-shrink-0 transition-all duration-200 ${
-              selectedChannels.includes(platform.id)
-                ? "border-2 border-green-500 bg-green-50 dark:bg-green-950/20"
-                : "border-2 border-transparent hover:border-green-300 hover:bg-green-50/50 dark:hover:bg-green-950/10"
-            }`}
-            onClick={() => onChannelToggle(platform.id)}
-          >
-            <div className={`p-2 rounded-lg ${platform.color} text-white flex items-center justify-center`}>
-              {platform.icon}
-            </div>
-          </div>
-        ))}
+        {/* Icons */}
+        <div className={styles.iconWrapper}>
+          {channels.map((channel) => (
+            <button
+              key={channel}
+              className={`${styles.iconButton} ${ChannelStyle[channel]} ${
+                selectedChannels.has(channel) ? styles.selected : ''
+              }`}
+              onClick={() => toggleChannel(channel)}
+              aria-pressed={selectedChannels.has(channel)}
+            >
+              {ChannelIcon[channel]}
+            </button>
+          ))}
+        </div>
+
+        {/* Select All Button */}
+        <button className={styles.selectAllButton} onClick={toggleSelectAll}>
+          {selectedChannels.size === channels.length ? 'Deselect All' : 'Select All'}
+        </button>
       </div>
-
-      <Button variant="outline" size="sm" onClick={onSelectAll} className="w-full">
-        {allSelected ? "Deselect All" : "Select All"}
-      </Button>
     </div>
   );
 }
