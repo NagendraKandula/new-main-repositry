@@ -3,10 +3,15 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { google } from 'googleapis';
 import { Readable } from 'stream';
+import { PrismaService } from '../../prisma/prisma.service';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class YoutubeService {
-  constructor(private config: ConfigService) {}
+  constructor(
+    private config: ConfigService,
+     private prisma: PrismaService,
+    ) {}
 
   async uploadVideoToYoutube(
     accessToken: string,
@@ -65,4 +70,7 @@ export class YoutubeService {
       throw new BadRequestException('Failed to upload video to YouTube.');
     }
   }
+
+
+  
 }

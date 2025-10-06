@@ -1,4 +1,6 @@
+// frontend/pages/Sidebar.tsx
 import React, { useState } from "react";
+import { useRouter } from 'next/router'; // Import useRouter for navigation
 import {
   FaPenNib,
   FaPaste,
@@ -6,8 +8,10 @@ import {
   FaRegCalendarAlt,
   FaChartBar,
   FaRegLightbulb,
+  FaYoutube, // Import the YouTube icon
 } from "react-icons/fa";
 import styles from "../styles/sidebar.module.css";
+import Link from "next/link";
 
 interface SidebarProps {
   activeSegment: string;
@@ -17,21 +21,24 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, activePlatform }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter(); // Initialize the router
 
+  // Added a 'route' property to each segment for navigation
   const segments = [
-    { name: "Create", icon: <FaPenNib /> },
-    { name: "Templates", icon: <FaPaste /> },
-    { name: "Publish", icon: <FaUpload /> },
-    { name: "Planning", icon: <FaRegCalendarAlt /> },
-    { name: "Analytics", icon: <FaChartBar /> },
-    { name: "Summary", icon: <FaRegLightbulb /> },
+    { name: "Create", icon: <FaPenNib />, route: "/Create" },
+    { name: "Templates", icon: <FaPaste />, route: "/Templates" },
+    { name: "Publish", icon: <FaUpload />, route: "/Publish" },
+    { name: "Planning", icon: <FaRegCalendarAlt />, route: "/Planning" },
+    { name: "Analytics", icon: <FaChartBar />, route: "/Analytics" },
+    // This is the new segment for YouTube Analytics
+    { name: "YouTube Analytics", icon: <FaYoutube />, route: "/YoutubeAnalytics" },
+    { name: "Summary", icon: <FaRegLightbulb />, route: "/Summary" },
   ];
 
-  const handleClick = (name: string) => {
+  const handleClick = (name: string, route: string) => {
     setActiveSegment(name);
+    router.push(route); // Navigate to the page when a button is clicked
   };
-
-  // ✅ REMOVED: if (activePlatform) return null; — Sidebar now always visible
 
   return (
     <>
@@ -41,7 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, acti
             <button
               key={s.name}
               className={`${styles.segment} ${activeSegment === s.name ? styles.active : ""}`}
-              onClick={() => handleClick(s.name)}
+              onClick={() => handleClick(s.name, s.route)}
               aria-label={s.name}
             >
               <span className={styles.segmentIcon}>{s.icon}</span>
