@@ -16,6 +16,8 @@ async function bootstrap() {
   app.enableCors({
     origin: frontendUrl, // ✅ Use the variable here
     credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Accept, Authorization',
   });
   // Enables class-validator and class-transformer for all incoming requests
   app.useGlobalPipes(new ValidationPipe());
