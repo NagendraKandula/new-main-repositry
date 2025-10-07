@@ -14,7 +14,9 @@ export class YoutubeStrategy extends PassportStrategy(Strategy, 'youtube') {
       callbackURL:  configService.get<string>('YOUTUBE_CALLBACK_URL'),
       scope: ['https://www.googleapis.com/auth/youtube.readonly',
               'https://www.googleapis.com/auth/youtube.upload',
-              'https://www.googleapis.com/auth/yt-analytics.readonly' 
+              'https://www.googleapis.com/auth/yt-analytics.readonly',
+              'https://www.googleapis.com/auth/yt-analytics.readonly', // Add this scope
+             'https://www.googleapis.com/auth/yt-analytics-monetary.readonly', 
 
       ],
       prompt: 'consent',
