@@ -9,7 +9,7 @@ import { google } from 'googleapis';
 export class YoutubeAnalyticsService {
   constructor(private prisma: PrismaService, private configService: ConfigService) {}
 
-  private async _refreshAccessToken(socialAccount) {
+  private async _refreshAccessToken(socialAccount): Promise<string> {
     const oauth2Client = new google.auth.OAuth2(
       this.configService.get<string>('YOUTUBE_CLIENT_ID'),
       this.configService.get<string>('YOUTUBE_CLIENT_SECRET'),
@@ -23,6 +23,10 @@ export class YoutubeAnalyticsService {
     try {
       const { token } = await oauth2Client.getAccessToken();
       const newAccessToken = token;
+
+      if (!newAccessToken) {
+        throw new InternalServerErrorException('Failed to refresh YouTube access token: Token was null.');
+      }
 
       // Update the social account with the new access token in your database
       await this.prisma.socialAccount.update({
@@ -98,6 +102,9 @@ export class YoutubeAnalyticsService {
     };
 
     try {
+      if (!accessToken) {
+        throw new InternalServerErrorException('Access Token is not available');
+      }
       const response = await makeRequest(accessToken);
       return response.data;
     } catch (error) {
