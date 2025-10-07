@@ -124,14 +124,14 @@ export class AuthService {
     const tokens = await this.getTokens(user.id, user.email);
     res.cookie('access_token', tokens.accessToken, {
       httpOnly: true,
-      secure: this.config.get('NODE_ENV') !== 'development', // Set to true in production (requires HTTPS)
+      secure: true, // Set to true in production (requires HTTPS)
       sameSite: 'none', // 1 hour
        path: '/',
        maxAge: 15 * 60 * 1000,
     });
     res.cookie('refresh_token',tokens.refreshToken,{
       httpOnly: true,
-      secure: this.config.get('NODE_ENV') !== 'development', // Set to true in production (requires HTTPS)
+      secure: true, // Set to true in production (requires HTTPS)
       sameSite: 'none',
        path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000,
