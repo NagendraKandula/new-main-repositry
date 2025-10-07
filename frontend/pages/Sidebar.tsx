@@ -8,7 +8,6 @@ import {
   FaRegCalendarAlt,
   FaChartBar,
   FaRegLightbulb,
-  FaYoutube, // Import the YouTube icon
 } from "react-icons/fa";
 import styles from "../styles/sidebar.module.css";
 import Link from "next/link";
@@ -31,7 +30,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, acti
     { name: "Planning", icon: <FaRegCalendarAlt />, route: "/Planning" },
     { name: "Analytics", icon: <FaChartBar />, route: "/Analytics" },
     // This is the new segment for YouTube Analytics
-    { name: "YouTube Analytics", icon: <FaYoutube />, route: "/YoutubeAnalytics" },
     { name: "Summary", icon: <FaRegLightbulb />, route: "/Summary" },
   ];
 
