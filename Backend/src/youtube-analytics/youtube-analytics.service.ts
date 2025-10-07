@@ -1,15 +1,44 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import axios from 'axios';
-import {subDays,startOfMonth,endOfMonth} from 'date-fns';
+import { subDays, startOfMonth, endOfMonth } from 'date-fns';
+import { ConfigService } from '@nestjs/config';
+import { google } from 'googleapis';
 
 @Injectable()
 export class YoutubeAnalyticsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private configService: ConfigService) {}
 
-  async getChannelAnalytics(userId: number,range: string,year?:number,month?:number) {
-    // 1. Get the user's YouTube account from the database
-    const socialAccount = await this.prisma.socialAccount.findFirst({
+  private async _refreshAccessToken(socialAccount) {
+    const oauth2Client = new google.auth.OAuth2(
+      this.configService.get<string>('YOUTUBE_CLIENT_ID'),
+      this.configService.get<string>('YOUTUBE_CLIENT_SECRET'),
+      this.configService.get<string>('YOUTUBE_REDIRECT_URI'),
+    );
+
+    oauth2Client.setCredentials({
+      refresh_token: socialAccount.refreshToken,
+    });
+
+    try {
+      const { token } = await oauth2Client.getAccessToken();
+      const newAccessToken = token;
+
+      // Update the social account with the new access token in your database
+      await this.prisma.socialAccount.update({
+        where: { id: socialAccount.id },
+        data: { accessToken: newAccessToken },
+      });
+
+      return newAccessToken;
+    } catch (error) {
+      console.error('Failed to refresh YouTube access token:', error);
+      throw new InternalServerErrorException('Failed to refresh YouTube access token.');
+    }
+  }
+
+  async getChannelAnalytics(userId: number, range: string, year?: number, month?: number) {
+    let socialAccount = await this.prisma.socialAccount.findFirst({
       where: {
         userId,
         provider: 'youtube',
@@ -17,29 +46,28 @@ export class YoutubeAnalyticsService {
     });
 
     if (!socialAccount) {
-      throw new Error('YouTube account not connected for this user.');
+      throw new BadRequestException('YouTube account not connected for this user.');
     }
 
-    const accessToken = socialAccount.accessToken;
+    let accessToken = socialAccount.accessToken;
     const analyticsApiUrl = 'https://youtubeanalytics.googleapis.com/v2/reports';
- 
-      let startDate: string;
-      let endDate: string = new Date().toISOString().split('T')[0];
-     switch (range) {
-        case '7d':
-            startDate = subDays(new Date(),7).toISOString().split('T')[0];
-            break;
-        case '28d':
 
-            startDate = subDays(new Date(), 28).toISOString().split('T')[0];
-            break;
-        case '90d':
-            startDate = subDays(new Date(), 90).toISOString().split('T')[0];
-            break;
+    let startDate: string;
+    let endDate: string = new Date().toISOString().split('T')[0];
+    switch (range) {
+      case '7d':
+        startDate = subDays(new Date(), 7).toISOString().split('T')[0];
+        break;
+      case '28d':
+        startDate = subDays(new Date(), 28).toISOString().split('T')[0];
+        break;
+      case '90d':
+        startDate = subDays(new Date(), 90).toISOString().split('T')[0];
+        break;
       case '365d':
-            startDate = subDays(new Date(), 365).toISOString().split('T')[0];
-            break;
-        case 'month':
+        startDate = subDays(new Date(), 365).toISOString().split('T')[0];
+        break;
+      case 'month':
         if (!year || !month) throw new Error('Year and month required for monthly analytics');
         const firstDay = startOfMonth(new Date(year, month - 1));
         const lastDay = endOfMonth(firstDay);
@@ -47,34 +75,46 @@ export class YoutubeAnalyticsService {
         endDate = lastDay.toISOString().split('T')[0];
         break;
       case 'lifetime':
-        startDate = '2005-02-14'; // YouTube launch date (or earliest video upload)
+        startDate = '2005-02-14';
         break;
       default:
         throw new Error('Invalid analytics range');
-        }
-      try {
-      // 2. Make a request to the YouTube Analytics API
-      const response = await axios.get(analyticsApiUrl, {
+    }
+
+    const makeRequest = async (token: string) => {
+      return axios.get(analyticsApiUrl, {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         },
         params: {
-          ids: 'channel==MINE', // 'MINE' gets data for the authenticated user's channel
-          startDate, // Example start date
-          endDate, // Today's date
+          ids: 'channel==MINE',
+          startDate,
+          endDate,
           metrics: 'views,likes,comments,subscribersGained',
           dimensions: 'day',
           sort: 'day',
         },
       });
+    };
 
+    try {
+      const response = await makeRequest(accessToken);
       return response.data;
     } catch (error) {
-        // NOTE: A 401 error here often means the accessToken has expired.
-        // You would need to add logic here to use the refreshToken to get a new
-        // accessToken from Google, save it, and then retry this request.
-        console.error('Error fetching YouTube analytics:', error.response.data);
+      if (error.response && error.response.status === 401) {
+        // Token expired, let's refresh it.
+        try {
+          const newAccessToken = await this._refreshAccessToken(socialAccount);
+          const response = await makeRequest(newAccessToken);
+          return response.data;
+        } catch (refreshError) {
+          console.error('Error fetching YouTube analytics after refresh:', refreshError.response ? refreshError.response.data : refreshError.message);
+          throw new InternalServerErrorException('Failed to fetch YouTube analytics even after refreshing the token.');
+        }
+      } else {
+        console.error('Error fetching YouTube analytics:', error.response ? error.response.data : error.message);
         throw new InternalServerErrorException('Failed to fetch YouTube analytics');
+      }
     }
   }
 }
