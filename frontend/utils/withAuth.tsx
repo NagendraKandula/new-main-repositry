@@ -1,6 +1,6 @@
 // frontend/utils/withAuth.tsx
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import apiClient from '../lib/axios'; // You'll use this now
+import axios from 'axios'; // Import axios directly
 
 export function withAuth(gssp: GetServerSideProps): GetServerSideProps {
   return async (context: GetServerSidePropsContext) => {
@@ -18,10 +18,9 @@ export function withAuth(gssp: GetServerSideProps): GetServerSideProps {
     }
 
     try {
-      // ✅ This is the new, secure part.
-      // We are making a request from the Next.js server to the backend server.
-      // We must forward the token in the headers for the backend to validate.
-      await apiClient.get('/auth/profile', {
+      // Use axios directly and explicitly set the baseURL
+      // This is more robust for server-side execution.
+      await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/profile`, {
         headers: {
           Cookie: `access_token=${token}`,
         },
@@ -32,7 +31,7 @@ export function withAuth(gssp: GetServerSideProps): GetServerSideProps {
       return await gssp(context);
 
     } catch (error) {
-      // If apiClient throws an error (e.g., 401 Unauthorized), the token is invalid.
+      // If axios throws an error (e.g., 401 Unauthorized), the token is invalid.
       // Redirect the user to the login page.
       console.error("Authentication failed:", error);
       return {
