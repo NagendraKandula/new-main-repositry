@@ -26,7 +26,7 @@ export default function LoginPage() {
       setMessage(response.data.message || 'Login successful');
         setTimeout(() => {
         router.push('/Landing');
-      }, 100);
+      }, 250);
 
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'Login failed';
