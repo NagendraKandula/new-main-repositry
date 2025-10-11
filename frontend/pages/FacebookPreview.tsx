@@ -1,4 +1,6 @@
+// components/FacebookPreview.tsx
 import React from "react";
+import DOMPurify from "dompurify";
 import styles from "../styles/FacebookPreview.module.css";
 
 interface MediaItem {
@@ -14,23 +16,54 @@ interface FacebookPreviewProps {
 
 export function FacebookPreview({ content, mediaItems }: FacebookPreviewProps) {
   return (
-    <div className={styles.container}>
-      {/* Post Content */}
-      <p className={styles.content}>{content}</p>
+    <div className={styles.facebookPost}>
+      {/* Header */}
+      <div className={styles.postHeader}>
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+          alt="Facebook"
+          className={styles.logo}
+        />
+        <div>
+          <strong>Facebook</strong>
+          <div className={styles.timestamp}>Just now</div>
+        </div>
+        <div className={styles.moreOptions}>⋯</div>
+      </div>
 
-      {/* Media */}
+      {/* Content */}
+      {content && (
+        <div
+          className={styles.content}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+        />
+      )}
+
+      {/* Media — Only first item shown (like Facebook) */}
       {mediaItems.length > 0 && (
         <div className={styles.mediaContainer}>
-          {mediaItems.map((media) => (
-            <img 
-              key={media.id} 
-              src={media.url} 
-              alt="media" 
-              className={styles.mediaItem}
+          {mediaItems[0].type === 'image' ? (
+            <img
+              src={mediaItems[0].url}
+              alt="post media"
+              className={styles.media}
             />
-          ))}
+          ) : (
+            <video
+              src={mediaItems[0].url}
+              controls
+              className={styles.media}
+            />
+          )}
         </div>
       )}
+
+      {/* Action Bar — Always visible */}
+      <div className={styles.actionBar}>
+        <button className={styles.actionBtn}>Like</button>
+        <button className={styles.actionBtn}>Comment</button>
+        <button className={styles.actionBtn}>Share</button>
+      </div>
     </div>
   );
 }

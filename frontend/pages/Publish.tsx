@@ -1,14 +1,37 @@
 // pages/Publish.tsx
-import React, { useState } from 'react'; // ✅ Import useState
+import React, { useState } from 'react';
 import styles from '../styles/Publish.module.css';
-import ChannelSelector from './ChannelSelector';
+import ChannelSelector, { Channel } from './ChannelSelector'; // ✅ Import Channel type
 import ContentEditor from './ContentEditor';
 import DynamicPreview from './DynamicPreview';
 
 export default function Publish() {
-  // ✅ State lives INSIDE the component
+  // ✅ State for content and files
   const [content, setContent] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+
+  // ✅ State for selected channels — MUST be a Set<Channel>
+  const [selectedChannels, setSelectedChannels] = useState<Set<Channel>>(new Set());
+
+  // ✅ Action handlers
+  const handlePublish = () => {
+    if (selectedChannels.size === 0) {
+      alert("Please select at least one channel.");
+      return;
+    }
+    console.log("Publishing to:", Array.from(selectedChannels));
+    console.log("Content:", content);
+    console.log("Files:", files);
+    // TODO: Call API
+  };
+
+  const handleSaveDraft = () => {
+    console.log("Saving draft...");
+  };
+
+  const handleSchedule = () => {
+    console.log("Scheduling post...");
+  };
 
   return (
     <div className={styles.container}>
@@ -19,22 +42,31 @@ export default function Publish() {
       {/* Left panel: ChannelSelector + ContentEditor */}
       <div className={styles.editorPreviewContainer}>
         <div className={styles.leftPanel}>
-          <ChannelSelector />
-          <ContentEditor 
+          {/* ✅ Pass selectedChannels and onSelectionChange */}
+          <ChannelSelector
+            selectedChannels={selectedChannels}
+            onSelectionChange={setSelectedChannels}
+          />
+          <ContentEditor
             content={content}
             onContentChange={setContent}
             files={files}
             onFilesChange={setFiles}
+            onPublish={handlePublish}
+            onSaveDraft={handleSaveDraft}
+            onSchedule={handleSchedule}
           />
         </div>
+
         <div className={styles.previewWrapper}>
+          {/* ✅ Pass REAL selected platforms (as strings) */}
           <DynamicPreview
-            selectedPlatforms={['Facebook', 'Twitter']}
+            selectedPlatforms={Array.from(selectedChannels)} // ✅ Dynamic!
             content={content}
             mediaFiles={files}
-            onPublish={() => console.log('Publish clicked')}
-            onSaveDraft={() => console.log('Save Draft clicked')}
-            onSchedule={() => console.log('Schedule clicked')}
+            onPublish={handlePublish}
+            onSaveDraft={handleSaveDraft}
+            onSchedule={handleSchedule}
           />
         </div>
       </div>

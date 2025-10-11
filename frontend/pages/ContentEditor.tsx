@@ -1,13 +1,27 @@
-import React, { useState, useRef } from "react";
-import { Bold, Italic, Underline, Link, Hash, AtSign, Smile } from "lucide-react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
+import {
+  Bold,
+  Italic,
+  Underline,
+  Link,
+  Hash,
+  AtSign,
+  Smile,
+  Send,
+  Save,
+  Clock,
+} from "lucide-react";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import styles from "../styles/ContentEditor.module.css";
 
-// Define props
 export interface ContentEditorProps {
   content: string;
   onContentChange: (value: string) => void;
   files: File[];
   onFilesChange: (files: File[]) => void;
+  onPublish: () => void;
+  onSaveDraft: () => void;
+  onSchedule: () => void;
 }
 
 export default function ContentEditor({
@@ -15,16 +29,45 @@ export default function ContentEditor({
   onContentChange,
   files,
   onFilesChange,
+  onPublish,
+  onSaveDraft,
+  onSchedule,
 }: ContentEditorProps) {
-  // Local UI-only state (doesn't affect preview)
   const [aiEnabled, setAiEnabled] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const editorRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // ✅ File previews
+  const filePreviews = useMemo(
+    () =>
+      files.map((file) => ({
+        file,
+        url: URL.createObjectURL(file),
+        isImage: file.type.startsWith("image/"),
+      })),
+    [files]
+  );
+
+  useEffect(() => {
+    return () => {
+      filePreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+    };
+  }, [filePreviews]);
+
+  // Update innerHTML only when content changes externally
+  useEffect(() => {
+    if (editorRef.current && editorRef.current.innerHTML !== content) {
+      editorRef.current.innerHTML = content;
+    }
+  }, [content]);
 
   const handleFileUpload = (fileList: FileList | null) => {
     if (fileList) {
       const uploadedFiles = Array.from(fileList);
-      onFilesChange([...files, ...uploadedFiles]); // update parent
+      onFilesChange([...files, ...uploadedFiles]);
     }
   };
 
@@ -33,15 +76,12 @@ export default function ContentEditor({
     onFilesChange(newFiles);
   };
 
-  // Drag-and-drop handlers
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
   };
 
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
+  const handleDragLeave = () => setIsDragging(false);
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -49,8 +89,43 @@ export default function ContentEditor({
     handleFileUpload(e.dataTransfer.files);
   };
 
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
+  const triggerFileInput = () => fileInputRef.current?.click();
+
+  // Rich text commands
+  const applyCommand = (command: string, value?: string) => {
+    document.execCommand(command, false, value);
+    onContentChange(editorRef.current?.innerHTML || "");
+  };
+
+  // Emoji insertion
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    editor.focus();
+
+    const selection = window.getSelection();
+    if (!selection || !selection.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
+
+    const emojiNode = document.createTextNode(emojiData.emoji);
+    range.insertNode(emojiNode);
+
+    // Move cursor after emoji
+    range.setStartAfter(emojiNode);
+    range.collapse(true);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    onContentChange(editor.innerHTML);
+    setShowEmojiPicker(false);
+  };
+
+  const handleInput = () => {
+    onContentChange(editorRef.current?.innerHTML || "");
   };
 
   return (
@@ -73,80 +148,113 @@ export default function ContentEditor({
 
       {/* Toolbar */}
       <div className={styles.toolbar}>
-        <button className={styles.toolBtn} title="Bold">
+        <button
+          className={styles.toolBtn}
+          title="Bold"
+          onClick={() => applyCommand("bold")}
+        >
           <Bold className={styles.toolIcon} />
         </button>
-        <button className={styles.toolBtn} title="Italic">
+        <button
+          className={styles.toolBtn}
+          title="Italic"
+          onClick={() => applyCommand("italic")}
+        >
           <Italic className={styles.toolIcon} />
         </button>
-        <button className={styles.toolBtn} title="Underline">
+        <button
+          className={styles.toolBtn}
+          title="Underline"
+          onClick={() => applyCommand("underline")}
+        >
           <Underline className={styles.toolIcon} />
         </button>
-        <button className={styles.toolBtn} title="Link">
+        <button
+          className={styles.toolBtn}
+          title="Insert Link"
+          onClick={() => {
+            const url = prompt("Enter URL:");
+            if (url) applyCommand("createLink", url);
+          }}
+        >
           <Link className={styles.toolIcon} />
         </button>
-        <button className={styles.toolBtn} title="Hashtag">
+        <button
+          className={styles.toolBtn}
+          title="Hashtag"
+          onClick={() => applyCommand("insertText", "#hashtag ")}
+        >
           <Hash className={styles.toolIcon} />
         </button>
-        <button className={styles.toolBtn} title="Mention">
+        <button
+          className={styles.toolBtn}
+          title="Mention"
+          onClick={() => applyCommand("insertText", "@username ")}
+        >
           <AtSign className={styles.toolIcon} />
         </button>
-        <button className={styles.toolBtn} title="Emoji">
+        <button
+          className={styles.toolBtn}
+          title="Emoji"
+          onClick={() => setShowEmojiPicker((prev) => !prev)}
+        >
           <Smile className={styles.toolIcon} />
         </button>
       </div>
 
-      {/* Textarea */}
-      <textarea
-        className={styles.editorTextarea}
-        placeholder="Write your caption..."
-        value={content}
-        onChange={(e) => onContentChange(e.target.value)}
-        rows={4}
-      />
+      {/* Emoji Picker */}
+      {showEmojiPicker && (
+        <div className={styles.emojiPicker}>
+          <EmojiPicker onEmojiClick={handleEmojiClick} />
+        </div>
+      )}
+
+      {/* Editable Area */}
+      <div
+        ref={editorRef}
+        className={`${styles.editorTextarea} ${!content ? styles.empty : ""}`}
+        contentEditable
+        suppressContentEditableWarning
+        onInput={handleInput}
+      ></div>
 
       <div className={styles.editorFooter}>
-        <span className={styles.charCount}>{content.length} characters</span>
+        <span className={styles.charCount}>
+          {editorRef.current?.innerText.length || 0} characters
+        </span>
         <span className={styles.reachInfo}>Estimated reach: 3,000</span>
       </div>
 
       {/* Media Section */}
       <div className={styles.mediaSection}>
         <label className={styles.mediaLabel}>Media</label>
-
         <div className={styles.mediaGrid}>
-          {files.map((file, index) => {
-            const isImage = file.type.startsWith("image/");
-            const fileUrl = isImage ? URL.createObjectURL(file) : null;
-            return (
-              <div key={index} className={styles.mediaItem}>
-                {isImage ? (
-                  <img
-                    src={fileUrl}
-                    alt={file.name}
-                    className={styles.mediaPreview}
-                    onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)}
-                  />
-                ) : (
-                  <div className={styles.videoPlaceholder}>🎥 Video</div>
-                )}
-                <button
-                  onClick={() => handleRemoveFile(index)}
-                  className={styles.removeBtn}
-                  aria-label="Remove file"
-                >
-                  ✕
-                </button>
-                <p className={styles.fileName}>{file.name}</p>
-                <p className={styles.fileSize}>
-                  {(file.size / (1024 * 1024)).toFixed(1)} MB
-                </p>
-              </div>
-            );
-          })}
+          {filePreviews.map((preview, index) => (
+            <div key={index} className={styles.mediaItem}>
+              {preview.isImage ? (
+                <img
+                  src={preview.url}
+                  alt={preview.file.name}
+                  className={styles.mediaPreview}
+                />
+              ) : (
+                <div className={styles.videoPlaceholder}>🎥 Video</div>
+              )}
+              <button
+                onClick={() => handleRemoveFile(index)}
+                className={styles.removeBtn}
+                aria-label="Remove file"
+              >
+                ✕
+              </button>
+              <p className={styles.fileName}>{preview.file.name}</p>
+              <p className={styles.fileSize}>
+                {(preview.file.size / (1024 * 1024)).toFixed(1)} MB
+              </p>
+            </div>
+          ))}
         </div>
 
-        {/* Enhanced Upload Area */}
         <div
           className={`${styles.uploadArea} ${isDragging ? styles.dragging : ""}`}
           onDragOver={handleDragOver}
@@ -164,6 +272,25 @@ export default function ContentEditor({
             onChange={(e) => handleFileUpload(e.target.files)}
           />
         </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className={styles.actionButtons}>
+        <button
+          className={`${styles.actionBtn} ${styles.publishBtn}`}
+          onClick={onPublish}
+        >
+          <Send size={16} />
+          Publish
+        </button>
+        <button className={styles.actionBtn} onClick={onSaveDraft}>
+          <Save size={16} />
+          Save Draft
+        </button>
+        <button className={styles.actionBtn} onClick={onSchedule}>
+          <Clock size={16} />
+          Schedule
+        </button>
       </div>
     </div>
   );

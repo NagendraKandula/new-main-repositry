@@ -3,74 +3,86 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding-top: calc(2rem + 72px);
-  /* No text-align here — let children control alignment */
+  padding: 2rem 1.5rem; /* Responsive padding: top/bottom + left/right */
+  /* Removed calc(2rem + 72px) — use consistent spacing instead */
 }
 
 .headerSection {
-  margin-bottom: 24px; /* Slightly more space for better rhythm */
+  margin-bottom: 2rem;
   text-align: center;
+  max-width: 700px; /* Prevents overly wide headings on large screens */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .title {
-  font-size: 2rem; /* 36px */
+  font-size: 2rem; /* 32px */
   font-weight: 800;
   line-height: 1.2;
-  color: #111827; /* gray-900 */
+  color: #111827;
   margin: 0;
 }
 
 .subtitle {
-  font-size: 1.5rem; /* 24px */
+  font-size: 1.25rem; /* 20px — slightly reduced for better hierarchy */
   font-weight: 600;
-  color: #374151; /* gray-700 */
+  color: #374151;
   margin-top: 0.5rem;
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
-/* Main layout: Left panel (selector + editor) + Preview */
+/* Main layout: Editor + Preview side by side */
 .editorPreviewContainer {
   display: flex;
-  gap: 28px; /* Comfortable spacing between columns */
-  margin-top: 20px;
-  /* Removed justify-content: center — we want left panel to start from left */
+  gap: 28px;
+  margin-top: 1.5rem;
 }
 
-/* Left panel: contains ChannelSelector + ContentEditor */
 .leftPanel {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 24px; /* Vertical space between selector and editor */
-  min-width: 0; /* Prevents overflow issues in flex children */
+  gap: 24px;
+  min-width: 0; /* Critical for flex children to shrink properly */
 }
 
 .previewWrapper {
-  width: 320px;
-  flex-shrink: 0; /* Keeps preview at fixed width */
+  width: 380px; /* Match DynamicPreview’s max-width */
+  flex-shrink: 0;
 }
 
-/* Responsive: stack on tablets and phones */
-@media (max-width: 768px) {
+/* Responsive: Stack on tablets and mobile */
+@media (max-width: 900px) {
   .editorPreviewContainer {
     flex-direction: column;
-    align-items: stretch; /* Full width on mobile */
-    gap: 20px;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .leftPanel {
+    width: 100%;
+    max-width: 660px; /* Match ContentEditor’s max-width */
+    align-items: center;
   }
 
   .previewWrapper {
     width: 100%;
-    max-width: 320px;
-    margin: 0 auto; /* Center preview on mobile */
+    max-width: 380px;
+    margin: 0 auto;
   }
 }
 
-/* Keep responsive header adjustments */
+/* Smaller screens: adjust typography */
 @media (max-width: 640px) {
-  .title {
-    font-size: 1.875rem; /* 30px */
+  .container {
+    padding: 1.5rem 1rem;
   }
+
+  .title {
+    font-size: 1.75rem; /* 28px */
+  }
+
   .subtitle {
-    font-size: 1.25rem; /* 20px */
+    font-size: 1.125rem; /* 18px */
   }
 }

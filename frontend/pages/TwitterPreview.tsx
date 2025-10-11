@@ -1,12 +1,21 @@
-import { ImageWithFallback } from "./ui/ImageWithFallback";
-import { MessageCircle, Repeat2, Heart, Bookmark, Share, MoreHorizontal, Play } from "lucide-react";
-import exampleImage from "/public/post.png";
+import React from "react";
+import DOMPurify from "dompurify";
+import {
+  MessageCircle,
+  Repeat2,
+  Heart,
+  Bookmark,
+  Share,
+  MoreHorizontal,
+  Play,
+  Twitter,
+} from "lucide-react";
+import styles from "../styles/TwitterPreview.module.css";
 
 interface MediaItem {
   id: string;
-  type: 'image' | 'video';
+  type: "image" | "video";
   url: string;
-  thumbnail?: string;
 }
 
 interface TwitterPreviewProps {
@@ -16,75 +25,93 @@ interface TwitterPreviewProps {
 
 export function TwitterPreview({ content, mediaItems }: TwitterPreviewProps) {
   const hasMedia = mediaItems.length > 0;
+  const media = mediaItems[0]; // Show first media only
 
   return (
-    <div className="h-full bg-white flex flex-col overflow-y-auto rounded-xl shadow-sm border border-gray-100">
+    <div className={styles.card}>
       {/* Header */}
-      <div className="px-4 py-3 flex items-center justify-between border-b border-gray-100">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
+      <div className={styles.header}>
+        <div className={styles.profile}>
+          <div className={styles.icon}>
+            <Twitter size={16} color="white" />
           </div>
           <div>
-            <h3 className="font-semibold text-black">Twitter/X</h3>
-            <p className="text-gray-500 text-sm">twitter</p>
+            <h3 className={styles.username}>Twitter/X</h3>
+            <p className={styles.handle}>@twitter</p>
           </div>
         </div>
-        <MoreHorizontal className="h-5 w-5 text-gray-400" />
+        <MoreHorizontal size={20} className={styles.more} />
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 px-4 py-4 space-y-6">
-        {/* Text Content */}
+      {/* Content */}
+      <div className={styles.content}>
         {content && (
-          <p className="text-black leading-relaxed">{content}</p>
+          <p
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+          />
         )}
 
-        {/* Media Content */}
-        {hasMedia || content ? (
-          <div className="relative rounded-2xl overflow-hidden">
-            <ImageWithFallback
-              src={hasMedia ? mediaItems[0].url : exampleImage}
-              alt="Post media"
-              className="w-full h-64 object-cover"
-            />
-            {(hasMedia && mediaItems[0].type === 'video') && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 transition-colors cursor-pointer">
-                  <Play className="h-8 w-8 text-white" />
-                </div>
+        {hasMedia && (
+          <div className={styles.media}>
+            {media.type === "image" ? (
+              <img
+                src={media.url}
+                alt="Preview media"
+                className={styles.image}
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  img.src =
+                    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="%23999" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-4-4"/></svg>';
+                }}
+              />
+            ) : (
+              <div className={styles.videoContainer}>
+                <img
+                  src={media.url.replace(/\.(mp4|webm|ogg)$/i, ".jpg")}
+                  alt="Video thumbnail"
+                  className={styles.videoThumbnail}
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    img.style.display = "none";
+                    const parent = img.parentElement;
+                    if (parent) {
+                      parent.innerHTML = `
+                        <div class="${styles.fallbackVideo}">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                          </svg>
+                        </div>
+                      `;
+                    }
+                  }}
+                />
+                <Play size={32} className={styles.playIcon} />
               </div>
             )}
           </div>
-        ) : null}
+        )}
+      </div>
 
-        {/* Action Buttons */}
-        <div className="pt-3 flex justify-between max-w-xs">
-          <button className="flex items-center space-x-1 hover:bg-gray-100 rounded-full p-2 transition-colors group">
-            <MessageCircle className="h-4 w-4 text-gray-500 group-hover:text-blue-500" strokeWidth={1.5} />
-            <span className="text-xs text-gray-500 group-hover:text-blue-500">3</span>
-          </button>
-
-          <button className="flex items-center space-x-1 hover:bg-gray-100 rounded-full p-2 transition-colors group">
-            <Repeat2 className="h-4 w-4 text-gray-500 group-hover:text-green-500" strokeWidth={1.5} />
-            <span className="text-xs text-gray-500 group-hover:text-green-500">1</span>
-          </button>
-
-          <button className="flex items-center space-x-1 hover:bg-gray-100 rounded-full p-2 transition-colors group">
-            <Heart className="h-4 w-4 text-gray-500 group-hover:text-red-500" strokeWidth={1.5} />
-            <span className="text-xs text-gray-500 group-hover:text-red-500">7</span>
-          </button>
-
-          <button className="hover:bg-gray-100 rounded-full p-2 transition-colors group">
-            <Bookmark className="h-4 w-4 text-gray-500 group-hover:text-blue-500" strokeWidth={1.5} />
-          </button>
-
-          <button className="hover:bg-gray-100 rounded-full p-2 transition-colors group">
-            <Share className="h-4 w-4 text-gray-500 group-hover:text-blue-500" strokeWidth={1.5} />
-          </button>
-        </div>
+      {/* Actions */}
+      <div className={styles.actions}>
+        <button className={styles.action}>
+          <MessageCircle size={16} />
+          <span>3</span>
+        </button>
+        <button className={styles.action}>
+          <Repeat2 size={16} />
+          <span>1</span>
+        </button>
+        <button className={styles.action}>
+          <Heart size={16} />
+          <span>7</span>
+        </button>
+        <button className={styles.action}>
+          <Bookmark size={16} />
+        </button>
+        <button className={styles.action}>
+          <Share size={16} />
+        </button>
       </div>
     </div>
   );

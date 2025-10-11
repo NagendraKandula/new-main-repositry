@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// ChannelSelector.tsx
+import React from 'react';
 import {
   FaTwitter,
   FaFacebook,
@@ -10,7 +11,7 @@ import {
 import { SiThreads } from 'react-icons/si';
 import styles from '../styles/ChannelSelector.module.css';
 
-type Channel =
+export type Channel =
   | 'twitter'
   | 'facebook'
   | 'instagram'
@@ -22,13 +23,13 @@ type Channel =
 const channels: Channel[] = ['twitter', 'facebook', 'instagram', 'linkedin', 'pinterest', 'youtube', 'threads'];
 
 const ChannelIcon: Record<Channel, JSX.Element> = {
-  twitter: <FaTwitter size={20} />,
-  facebook: <FaFacebook size={23} />,
-  instagram: <FaInstagram size={24} />,
-  linkedin: <FaLinkedin size={23} />,
-  pinterest: <FaPinterest size={23} />,
-  youtube: <FaYoutube size={23} />,
-  threads: <SiThreads size={20} />,
+  twitter: <FaTwitter size={18} />,
+  facebook: <FaFacebook size={22} />,
+  instagram: <FaInstagram size={23} />,
+  linkedin: <FaLinkedin size={22} />,
+  pinterest: <FaPinterest size={22} />,
+  youtube: <FaYoutube size={22} />,
+  threads: <SiThreads size={19} />,
 };
 
 const ChannelStyle: Record<Channel, string> = {
@@ -41,8 +42,17 @@ const ChannelStyle: Record<Channel, string> = {
   threads: styles.threads,
 };
 
-export default function ChannelSelector() {
-  const [selectedChannels, setSelectedChannels] = useState<Set<Channel>>(new Set());
+// ✅ Add props to make it controlled
+interface ChannelSelectorProps {
+  selectedChannels: Set<Channel>;
+  onSelectionChange: (selected: Set<Channel>) => void;
+}
+
+export default function ChannelSelector({
+  selectedChannels,
+  onSelectionChange,
+}: ChannelSelectorProps) {
+  // ✅ Remove internal useState — now fully controlled
 
   const toggleChannel = (channel: Channel) => {
     const newSelected = new Set(selectedChannels);
@@ -51,25 +61,22 @@ export default function ChannelSelector() {
     } else {
       newSelected.add(channel);
     }
-    setSelectedChannels(newSelected);
+    onSelectionChange(newSelected);
   };
 
   const toggleSelectAll = () => {
     if (selectedChannels.size === channels.length) {
-      setSelectedChannels(new Set());
+      onSelectionChange(new Set());
     } else {
-      setSelectedChannels(new Set(channels));
+      onSelectionChange(new Set(channels));
     }
   };
 
   return (
     <div className={styles.container}>
-      {/* Single horizontal line container */}
       <div className={styles.horizontalWrapper}>
-        {/* Title */}
         <h2 className={styles.title}>Select Channels</h2>
 
-        {/* Icons */}
         <div className={styles.iconWrapper}>
           {channels.map((channel) => (
             <button
@@ -85,7 +92,6 @@ export default function ChannelSelector() {
           ))}
         </div>
 
-        {/* Select All Button */}
         <button className={styles.selectAllButton} onClick={toggleSelectAll}>
           {selectedChannels.size === channels.length ? 'Deselect All' : 'Select All'}
         </button>

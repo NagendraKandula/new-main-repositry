@@ -1,12 +1,21 @@
-import { ImageWithFallback } from "./ui/ImageWithFallback";
-import { ThumbsUp, MessageCircle, Repeat2, Send, Globe, Play, MoreHorizontal } from "lucide-react";
-
-const profileImage = "/public/profile.png";
-const exampleImage = "/public/post.png";
+// components/LinkedInPreview.tsx
+import React from "react";
+import DOMPurify from "dompurify";
+import styles from "../styles/LinkedInPreview.module.css";
+import {
+  ThumbsUp,
+  MessageCircle,
+  Repeat2,
+  Send,
+  Globe,
+  MoreHorizontal,
+  Play,
+  User,
+} from "lucide-react";
 
 interface MediaItem {
   id: string;
-  type: 'image' | 'video';
+  type: "image" | "video";
   url: string;
   thumbnail?: string;
 }
@@ -17,100 +26,108 @@ interface LinkedInPreviewProps {
   firstComment?: string;
 }
 
-export function LinkedInPreview({ content, mediaItems, firstComment }: LinkedInPreviewProps) {
+export function LinkedInPreview({
+  content,
+  mediaItems,
+  firstComment,
+}: LinkedInPreviewProps) {
   const hasMedia = mediaItems.length > 0;
   const media = mediaItems[0];
 
   return (
-    <div className="h-full bg-white flex flex-col rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className={styles.card}>
       {/* Header */}
-      <div className="p-4 flex items-center justify-between border-b border-gray-100">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">in</span>
-          </div>
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
+          <div className={styles.logo}>in</div>
           <div>
-            <h3 className="font-semibold text-gray-900 text-sm">LinkedIn</h3>
-            <div className="flex items-center space-x-1 text-sm text-gray-500">
-              <span>now</span>
-              <span>•</span>
-              <Globe className="h-3 w-3" />
+            <div className={styles.platform}>LinkedIn</div>
+            <div className={styles.time}>
+              <span>now</span> • <Globe size={12} />
             </div>
           </div>
         </div>
-        <MoreHorizontal className="h-5 w-5 text-gray-500" />
+        <MoreHorizontal className={styles.moreIcon} />
       </div>
 
       {/* Content */}
-      <div className="px-4 py-3">
-        <p className="text-gray-900 text-sm">{content || "hi, travel"}</p>
-      </div>
+      <div
+        className={styles.content}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content || "Hi, travel!") }}
+      />
 
       {/* Media */}
       {hasMedia && (
-        <div className="relative bg-black">
-          <ImageWithFallback
-            src={media.url || exampleImage}
-            alt="Post media"
-            className="w-full h-48 object-cover"
-          />
-          {media.type === "video" && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white">
-                <Play className="h-8 w-8 text-white ml-1" fill="white" />
-              </div>
+        <div className={styles.media}>
+          {media.type === "image" ? (
+            <img
+              src={media.url}
+              alt="Post media"
+              className={styles.image}
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                img.src =
+                  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'><rect x='3' y='3' width='18' height='18' rx='2' ry='2'/><circle cx='8.5' cy='8.5' r='1.5'/><path d='M21 15l-4-4'/></svg>";
+              }}
+            />
+          ) : (
+            <div className={styles.videoContainer}>
+              <img
+                src={media.thumbnail || media.url.replace(/\.(mp4|webm|mov|avi)$/i, ".jpg")}
+                alt="Video thumbnail"
+                className={styles.videoThumbnail}
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  img.style.display = "none";
+                  const parent = img.parentElement;
+                  if (parent) {
+                    parent.innerHTML = `
+                      <div class="${styles.fallbackVideo}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                          <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                      </div>
+                    `;
+                  }
+                }}
+              />
+              <Play size={32} className={styles.playIcon} />
             </div>
           )}
         </div>
       )}
 
-      {/* First Comment */}
+      {/* Comment */}
       {firstComment && (
-        <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
-          <div className="flex items-start space-x-3">
-            <ImageWithFallback
-              src={profileImage}
-              alt="Your profile"
-              className="w-8 h-8 rounded-full object-cover"
-            />
-            <div className="flex-1">
-              <div className="bg-gray-100 rounded-2xl px-4 py-2">
-                <div className="text-xs font-medium text-gray-900 mb-1">Matteo Giardino</div>
-                <p className="text-xs text-gray-800">{firstComment}</p>
-              </div>
-              <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                <button className="hover:text-blue-600">Like</button>
-                <button className="hover:text-blue-600">Reply</button>
-                <span>now</span>
-              </div>
-            </div>
+        <div className={styles.commentSection}>
+          <div className={styles.profileIcon}>
+            <User size={24} color="#555" />
+          </div>
+          <div className={styles.commentBox}>
+            <span className={styles.commentName}>Matteo Giardino</span>
+            <p className={styles.commentText}>{firstComment}</p>
           </div>
         </div>
       )}
 
-      {/* Action Buttons */}
-      <div className="px-2 py-3 border-t border-gray-100">
-        <div className="flex justify-between">
-          <button className="flex items-center justify-center space-x-1 px-1 py-2 hover:bg-gray-50 rounded-lg transition-colors min-w-0">
-            <ThumbsUp className="h-4 w-4 text-gray-600" strokeWidth={1.5} />
-            <span className="text-xs text-gray-600">Like</span>
-          </button>
-
-          <button className="flex items-center justify-center space-x-1 px-1 py-2 hover:bg-gray-50 rounded-lg transition-colors min-w-0">
-            <MessageCircle className="h-4 w-4 text-gray-600" strokeWidth={1.5} />
-            <span className="text-xs text-gray-600">Comment</span>
-          </button>
-
-          <button className="flex items-center justify-center space-x-1 px-1 py-2 hover:bg-gray-50 rounded-lg transition-colors min-w-0">
-            <Repeat2 className="h-4 w-4 text-gray-600" strokeWidth={1.5} />
-            <span className="text-xs text-gray-600">Repost</span>
-          </button>
-
-          <button className="flex items-center justify-center space-x-1 px-1 py-2 hover:bg-gray-50 rounded-lg transition-colors min-w-0">
-            <Send className="h-4 w-4 text-gray-600" strokeWidth={1.5} />
-            <span className="text-xs text-gray-600">Send</span>
-          </button>
-        </div>
+      {/* Actions */}
+      <div className={styles.actions}>
+        <button>
+          <ThumbsUp size={18} />
+          <span>Like</span>
+        </button>
+        <button>
+          <MessageCircle size={18} />
+          <span>Comment</span>
+        </button>
+        <button>
+          <Repeat2 size={18} />
+          <span>Repost</span>
+        </button>
+        <button>
+          <Send size={18} />
+          <span>Send</span>
+        </button>
       </div>
     </div>
   );

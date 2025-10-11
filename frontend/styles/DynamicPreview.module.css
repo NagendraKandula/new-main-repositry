@@ -2,175 +2,142 @@
 
 .previewContainer {
   width: 100%;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: linear-gradient(to bottom, #60a5fa, #f59e0b); /* Light background to contrast phone */
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 0 auto; /* Center instead of negative margin */
 }
 
 .previewHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 4px;
 }
 
 .previewTitle {
-  font-size: 1.2rem;
-  font-weight: 900;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: #111827;
-  margin: 0;
 }
 
 .platformCount {
+  background-color: #e5e7eb;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1.5rem;
   font-size: 0.85rem;
-  color: #6b7280;
+  font-weight: 600;
+  color: #4b5563;
 }
 
-/* Platform Tabs */
-.platformTabs {
-  display: flex;
-  gap: 8px;
-  padding: 4px 0;
-}
-
-.tab {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid #d1d5db;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 16px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.tab:hover {
-  transform: scale(1.05);
-}
-
-.activeTab {
-  transform: scale(1.1);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-
-/* Phone Mockup */
 .phoneWrapper {
   display: flex;
   justify-content: center;
+  padding: 0.5rem 0;
 }
 
 .phone {
-  width: 320px;
-  height: 600px;
-  background: #000;
-  border-radius: 40px;
-  padding: 16px;
-  position: relative;
+  width: 220px;
+  height: 460px;
+  border-radius: 2.5rem;
+  border: 14px solid #1e293b; /* Darker, more realistic frame */
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  position: relative;
+  background: #000; /* Simulate bezel */
+}
+
+/* Simulate notch (optional but realistic) */
+.phone::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30%;
+  height: 4px;
+  background: #000;
+  z-index: 10;
+  border-radius: 0 0 4px 4px;
 }
 
 .screen {
-  width: 100%;
   height: 100%;
-  background: white;
-  border-radius: 32px;
-  padding: 20px;
-  box-sizing: border-box;
-  overflow: auto;
-}
-
-.postHeader {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.postLogo {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.postInfo {
+  background-color: #fff;
+  padding: 16px 12px 24px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.postPlatform {
-  font-weight: 600;
-  margin: 0;
-  font-size: 1rem;
-}
-
-.postTime {
-  font-size: 0.8rem;
-  color: #6b7280;
-}
-
-.postContent p {
-  margin: 0 0 16px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-}
-
-.postImage {
+/* Realistic post content styling */
+.postContent {
   width: 100%;
-  border-radius: 12px;
-  max-height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.previewText {
+  font-size: 15px;
+  line-height: 1.4;
+  color: #111827;
+  word-break: break-word;
+  white-space: pre-wrap; /* Preserve line breaks from textarea */
+}
+
+/* Media Grid */
+.previewMediaGrid {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+
+/* Single media item */
+.previewMediaWrapper {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f3f4f6;
+  aspect-ratio: 1 / 1; /* Square for Instagram-like, adjust per platform later */
+}
+
+.previewMedia {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Video fallback if needed */
+.previewMediaWrapper video {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-/* Controls */
-.controls {
-  display: flex;
-  gap: 12px;
-  margin-top: 8px;
+/* Welcome message (when empty) */
+.welcomeMessage {
+  font-size: 1.2rem;
+  color: #9ca3af;
+  text-align: center;
+  font-weight: 500;
+  padding: 20px;
 }
 
-.controlButton {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: opacity 0.2s;
+/* Scrollbar styling (optional) */
+.screen::-webkit-scrollbar {
+  width: 6px;
 }
-
-.controlButton:hover {
-  opacity: 0.9;
-}
-
-.publishButton {
-  background: #4ade4c;
-  color: white;
-}
-
-.icon {
-  width: 16px;
-  height: 16px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .phone {
-    width: 100%;
-    max-width: 320px;
-    height: auto;
-    aspect-ratio: 9 / 19.5;
-  }
+.screen::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
 }
