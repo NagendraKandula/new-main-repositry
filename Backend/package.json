@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
@@ -32,6 +33,8 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "cookie-parser": "^1.4.7",
+    "date-fns": "^4.1.0",
+    "express-session": "^1.18.2",
     "fb": "^2.0.0",
     "googleapis": "^160.0.0",
     "jsonwebtoken": "^9.0.2",
@@ -41,7 +44,6 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-linkedin-oauth2": "^2.0.0",
-    "passport-twitter": "^1.0.4",
     "passport-youtube-v3": "^2.1.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
@@ -57,7 +59,9 @@
     "@types/axios": "^0.9.36",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.9",
+    "@types/date-fns": "^2.5.3",
     "@types/express": "^5.0.3",
+    "@types/express-session": "^1.18.2",
     "@types/jest": "^29.5.14",
     "@types/multer": "^2.0.0",
     "@types/node": "^22.10.7",
@@ -66,6 +70,7 @@
     "@types/passport-google-oauth20": "^2.0.16",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-linkedin-oauth2": "^1.5.6",
+    "@types/passport-oauth2": "^1.8.0",
     "@types/passport-twitter": "^1.0.40",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",

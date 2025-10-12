@@ -33,12 +33,17 @@ export class FacebookService {
 
     try {
       // Step 1: Get the user's pages
+      console.log('Access Token:', accessToken);
       const pagesResponse = await axios.get(
         `${this.FACEBOOK_GRAPH_API_URL}/me/accounts`,
         {
           params: { access_token: accessToken },
         },
+      
       );
+       console.log('Pages:', pagesResponse.data);
+        console.log('Pages Response:', pagesResponse.data);
+        
 
       // FIX: Use type assertion 'as' to tell TypeScript the exact type.
       const pages = (pagesResponse.data as { data: FacebookPage[] }).data;

@@ -1,15 +1,16 @@
 // src/auth/auth.controller.ts
-import { Body, Controller, Post, UseGuards, Get, Request, Res, Req } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Get, Request, Res, Req, Scope, HttpCode, HttpStatus,BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { JwtRefreshGuard } from './jwt-refresh.guard';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config'; 
-
+//import {  YoutubeAuthGuard} from './youtube-auth.guard';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService,
@@ -58,37 +59,67 @@ export class AuthController {
   googleAuthRedirect(@Req() req, @Res({ passthrough: true }) res: Response) {
     return this.authService.googleLogin(req, res);
   }
-  @Post('Logout')
-  Logout(@Res({ passthrough: true }) res: Response) {
-    return this.authService.Logout(res);
+  2
+  @UseGuards(JwtRefreshGuard) 
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refreshTokens(@Request() req, @Res({ passthrough: true }) res: Response) {
+    const userId = req.user.id;
+    const refreshToken = req
+    .get('Authorization')
+    .replace('Bearer', '')
+    .trim();
+    const {accessToken } = await this.authService.refreshTokens(userId, refreshToken);
+    res.cookie('access_token', accessToken, {
+      httpOnly: true, 
+      secure: this.configService.get('NODE_ENV') !== 'development', 
+      sameSite:'none',
+    });
+    return res.send({accessToken});
   }
+  @UseGuards(JwtAuthGuard)
+@Post('logout')
+@UseGuards(JwtAuthGuard)
+@HttpCode(HttpStatus.OK)
+async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
+  const userId = req.user.id;
+  return this.authService.logout(userId, res);
+}
+  
   @Get('youtube')
-  @UseGuards(AuthGuard('youtube'))
-  async youtubeAuth(@Req() req) {
+  @UseGuards(JwtAuthGuard)
+  async redirectToYoutube(@Req() req,@Res() res: Response) {
+    const userId = req.user.userId;
+    const state = encodeURIComponent(JSON.stringify({ userId }));
+     const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+                   `client_id=${process.env.YOUTUBE_CLIENT_ID}` +
+                   `&redirect_uri=${encodeURIComponent(process.env.YOUTUBE_CALLBACK_URL!)}` +
+                   `&response_type=code` +
+                   `&scope=${encodeURIComponent('https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload')}` +
+                   `&access_type=offline` +
+                   `&prompt=consent` +
+                   `&state=${state}`;
+     return res.redirect(oauthUrl);
+
     // This route is never hit directly because the guard redirects to YouTube
   }
 
   @Get('youtube/callback')
   @UseGuards(AuthGuard('youtube'))
-  youtubeAuthRedirect(@Req() req, @Res() res: Response) {
-    // The 'user' object is attached by the YoutubeStrategy's validate function
-    const { accessToken, refreshToken } = req.user;
+  async youtubeAuthRedirect(@Req() req, @Res() res: Response) {
+    
+    const { accessToken, refreshToken, youtubeId, displayName } = req.user;
 
-    // Set tokens in HTTP-only cookies
-    res.cookie('youtube_access_token', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
-      sameSite: 'none',
-    });
+  // Extract app user from state
+  const state = JSON.parse(decodeURIComponent(req.query.state as string));
+  const appUserId = state.userId;
 
-    res.cookie('youtube_refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'none',
-    });
+  if (!appUserId) {
+    throw new BadRequestException('App user not found in state');
+  }
 
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL');
-    res.redirect(`${frontendUrl}/Landing?youtube=connected`); // Or any other page
+  // Call service to link YouTube account
+  return this.authService.youtubeLogin(req, res, appUserId);
   }
   @Get('facebook')
   @UseGuards(AuthGuard('facebook'))
@@ -100,18 +131,6 @@ export class AuthController {
   facebookAuthRedirect(@Req() req, @Res({ passthrough: true }) res: Response) {
     // You can create a new service method for this or reuse the googleLogin logic
     return this.authService.facebookLogin(req, res);
-  }
-
-@Get('twitter')
-  @UseGuards(AuthGuard('twitter'))
-  async twitterAuth(@Req() req) {
-    // Initiates the Twitter OAuth1.0a login flow
-  }
-  @Get('twitter/callback')
-  @UseGuards(AuthGuard('twitter'))
-  twitterAuthRedirect(@Req() req, @Res({ passthrough: true }) res: Response) {
-    // You can create a new service method for this or reuse the googleLogin logic
-    return this.authService.twitterLogin(req, res);
   }
 
 }

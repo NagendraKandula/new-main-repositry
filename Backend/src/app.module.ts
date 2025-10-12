@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { YoutubeModule } from './auth/youtube/youtube.module';
 import { FacebookModule } from './facebook/facebook.module';
+import { YoutubeAnalyticsModule } from './youtube-analytics/youtube-analytics.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { FacebookModule } from './facebook/facebook.module';
     AuthModule,
     YoutubeModule,
     FacebookModule,
+    YoutubeAnalyticsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, PrismaService],

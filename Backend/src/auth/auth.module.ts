@@ -11,11 +11,13 @@ import { YoutubeStrategy } from './youtube.strategy';
 import { YoutubeModule } from './youtube/youtube.module'; 
 import { FacebookStrategy } from './facebook.strategy';// <-- Import YoutubeStrategy
 import { LinkedinStrategy } from './linkedin.strategy';
-import { TwitterStrategy } from './twitter.strategy';
+import { HttpModule } from '@nestjs/axios';
+import { JwtRefreshTokenStrategy } from './jwt-refresh.strategy';
 
 @Module({
   imports: [
     PrismaModule,
+    HttpModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -26,7 +28,7 @@ import { TwitterStrategy } from './twitter.strategy';
     }),
   ],
   controllers: [AuthController, LinkedinStrategy],
-  providers: [AuthService, JwtStrategy, GoogleStrategy,YoutubeStrategy,FacebookStrategy, TwitterStrategy], // <-- Add GoogleStrategy
+  providers: [AuthService, JwtStrategy, GoogleStrategy,YoutubeStrategy,FacebookStrategy,JwtRefreshTokenStrategy], // <-- Add GoogleStrategy
   exports: [AuthService, JwtModule], 
 })
 export class AuthModule {}
