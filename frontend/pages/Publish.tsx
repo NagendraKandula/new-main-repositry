@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styles from '../styles/Publish.module.css';
 import ChannelSelector, { Channel } from './ChannelSelector'; // ✅ Import Channel type
 import ContentEditor from './ContentEditor';
-import DynamicPreview from './DynamicPreview';
+import DynamicPreview from '../components/DynamicPreview';
 
 export default function Publish() {
   // ✅ State for content and files

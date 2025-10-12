@@ -21,18 +21,18 @@ interface MediaItem {
 }
 
 interface LinkedInPreviewProps {
-  content: string;
-  mediaItems: MediaItem[];
+  content?: string;          // optional
+  mediaItems?: MediaItem[];  // optional
   firstComment?: string;
 }
 
-export  default function LinkedInPreview({
-  content,
-  mediaItems,
+export default function LinkedInPreview({
+  content = "Hi, travel!",
+  mediaItems = [], // 👈 critical fallback
   firstComment,
 }: LinkedInPreviewProps) {
   const hasMedia = mediaItems.length > 0;
-  const media = mediaItems[0];
+  const media = hasMedia ? mediaItems[0] : null;
 
   return (
     <div className={styles.card}>
@@ -53,11 +53,11 @@ export  default function LinkedInPreview({
       {/* Content */}
       <div
         className={styles.content}
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content || "Hi, travel!") }}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
       />
 
       {/* Media */}
-      {hasMedia && (
+      {hasMedia && media && (
         <div className={styles.media}>
           {media.type === "image" ? (
             <img

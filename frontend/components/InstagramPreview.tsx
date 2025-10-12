@@ -13,15 +13,15 @@ interface MediaItem {
 }
 
 interface InstagramPreviewProps {
-  content: string; // Caption (optional)
-  mediaItems: MediaItem[];
+  content?: string; // optional
+  mediaItems?: MediaItem[]; // optional
   username?: string;
   timeAgo?: string;
 }
 
 export default function InstagramPreview({
   content = "",
-  mediaItems,
+  mediaItems = [], // 👈 Safe fallback
   username = "instagram",
   timeAgo = "JUST NOW",
 }: InstagramPreviewProps) {

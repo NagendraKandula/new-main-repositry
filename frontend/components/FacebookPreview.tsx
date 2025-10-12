@@ -10,11 +10,14 @@ interface MediaItem {
 }
 
 interface FacebookPreviewProps {
-  content: string;
-  mediaItems: MediaItem[];
+  content?: string; // optional
+  mediaItems?: MediaItem[]; // optional
 }
 
-export default function FacebookPreview({ content, mediaItems }: FacebookPreviewProps) {
+export default function FacebookPreview({
+  content = '',
+  mediaItems = [] // 👈 fallback to empty array
+}: FacebookPreviewProps) {
   return (
     <div className={styles.facebookPost}>
       {/* Header */}
@@ -58,7 +61,7 @@ export default function FacebookPreview({ content, mediaItems }: FacebookPreview
         </div>
       )}
 
-      {/* Action Bar — Always visible */}
+      {/* Action Bar */}
       <div className={styles.actionBar}>
         <button className={styles.actionBtn}>Like</button>
         <button className={styles.actionBtn}>Comment</button>
