@@ -1,8 +1,8 @@
 // pages/Publish.tsx
 import React, { useState } from 'react';
 import styles from '../styles/Publish.module.css';
-import ChannelSelector, { Channel } from './ChannelSelector'; // ✅ Import Channel type
-import ContentEditor from './ContentEditor';
+import ChannelSelector, { Channel } from '../components/ChannelSelector'; // ✅ Import Channel type
+import ContentEditor from '../components/ContentEditor';
 import DynamicPreview from '../components/DynamicPreview';
 
 export default function Publish() {
