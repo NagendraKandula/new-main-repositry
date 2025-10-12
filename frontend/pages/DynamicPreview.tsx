@@ -2,13 +2,13 @@
 import React, { useMemo, useEffect } from "react";
 import styles from "../styles/DynamicPreview.module.css";
 import DOMPurify from "dompurify";
-import { FacebookPreview } from "./FacebookPreview";
-import { TwitterPreview } from "./TwitterPreview";
-import { InstagramPreview } from "./InstagramPreview";
-import { LinkedInPreview } from "./LinkedInPreview";
-import { PinterestPreview } from "./PinterestPreview";
-import { ThreadsPreview } from "./ThreadsPreview";
-import { YouTubePreview } from "./YouTubePreview";
+import FacebookPreview from "./FacebookPreview";
+import TwitterPreview from "./TwitterPreview";
+import InstagramPreview from "./InstagramPreview";
+import LinkedInPreview from "./LinkedInPreview";
+import PinterestPreview from "./PinterestPreview";
+import ThreadsPreview from "./ThreadsPreview";
+import YouTubePreview from "./YouTubePreview";
 
 interface MediaItem {
   id: string;
