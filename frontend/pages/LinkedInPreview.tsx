@@ -26,7 +26,7 @@ interface LinkedInPreviewProps {
   firstComment?: string;
 }
 
-export function LinkedInPreview({
+export  default function LinkedInPreview({
   content,
   mediaItems,
   firstComment,

@@ -16,7 +16,7 @@ interface ThreadsPreviewProps {
   mediaItems: MediaItem[];
 }
 
-export function ThreadsPreview({ content, mediaItems }: ThreadsPreviewProps) {
+export default function ThreadsPreview({ content, mediaItems }: ThreadsPreviewProps) {
   const hasMedia = mediaItems.length > 0;
 
   return (

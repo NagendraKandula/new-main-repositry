@@ -19,7 +19,7 @@ interface InstagramPreviewProps {
   timeAgo?: string;
 }
 
-export function InstagramPreview({
+export default function InstagramPreview({
   content = "",
   mediaItems,
   username = "instagram",

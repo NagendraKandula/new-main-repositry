@@ -14,7 +14,7 @@ interface FacebookPreviewProps {
   mediaItems: MediaItem[];
 }
 
-export function FacebookPreview({ content, mediaItems }: FacebookPreviewProps) {
+export default function FacebookPreview({ content, mediaItems }: FacebookPreviewProps) {
   return (
     <div className={styles.facebookPost}>
       {/* Header */}

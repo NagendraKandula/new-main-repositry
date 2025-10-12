@@ -23,7 +23,7 @@ interface TwitterPreviewProps {
   mediaItems: MediaItem[];
 }
 
-export function TwitterPreview({ content, mediaItems }: TwitterPreviewProps) {
+export default function TwitterPreview({ content, mediaItems }: TwitterPreviewProps) {
   const hasMedia = mediaItems.length > 0;
   const media = mediaItems[0]; // Show first media only
 

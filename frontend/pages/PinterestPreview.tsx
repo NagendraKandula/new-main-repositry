@@ -14,7 +14,7 @@ interface PinterestPreviewProps {
   mediaItems: MediaItem[];
 }
 
-export function PinterestPreview({ content, mediaItems }: PinterestPreviewProps) {
+export default function PinterestPreview({ content, mediaItems }: PinterestPreviewProps) {
   const hasMedia = mediaItems.length > 0;
   const media = mediaItems[0];
 

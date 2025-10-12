@@ -21,7 +21,7 @@ interface YouTubePreviewProps {
   mediaItems: MediaItem[];
 }
 
-export function YouTubePreview({ content, mediaItems }: YouTubePreviewProps) {
+export default function YouTubePreview({ content, mediaItems }: YouTubePreviewProps) {
   const hasMedia = mediaItems.length > 0;
 
   return (
