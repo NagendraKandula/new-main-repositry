@@ -1,7 +1,17 @@
 // frontend/pages/YouTubePost.tsx
 import React, { useState } from "react";
 import styles from "../styles/YouTubePost.module.css";
-import { FaYoutube, FaUpload, FaPlus, FaSmile, FaHashtag, FaMagic, FaTimes } from "react-icons/fa";
+import {
+  FaYoutube,
+  FaUpload,
+  FaPlus,
+  FaSmile,
+  FaHashtag,
+  FaMagic,
+  FaTimes,
+  FaComment,
+  FaShareAlt,
+} from "react-icons/fa";
 import apiClient from "../lib/axios";
 import { withAuth } from "../utils/withAuth";
 import { GetServerSideProps } from "next";
@@ -17,6 +27,11 @@ const YouTubePost = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+
+  // Placeholder user info for preview
+  const username = "bantubillisiva";
+  const avatarUrl = "/Limg.png"; // Ensure this exists in public/
 
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,6 +100,7 @@ const YouTubePost = () => {
 
   return (
     <div className={styles.container}>
+      {/* Main Form Card */}
       <div className={styles.card}>
         {/* Header */}
         <div className={styles.header}>
@@ -165,37 +181,37 @@ const YouTubePost = () => {
             <button type="button" className={styles.toolButton}>
               <FaHashtag />
             </button>
-            <button type="button" className={`${styles.toolButton} ${styles.aiAssistantButton}`}>
-  <FaMagic /> AI Assistant
-</button>
-
+            <button
+              type="button"
+              className={`${styles.toolButton} ${styles.aiAssistantButton}`}
+            >
+              <FaMagic /> AI Assistant
+            </button>
             <span className={styles.charCount}>5000</span>
           </div>
 
           {/* Title Field */}
-          {/* Title Field */}
-<div className={styles.inputGroup}>
-  <label>Title</label>
-  <input
-    type="text"
-    value={title}
-    onChange={(e) => setTitle(e.target.value)}
-    placeholder="Enter video title"
-    required
-  />
-</div>
+          <div className={styles.inputGroup}>
+            <label>Title</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter video title"
+              required
+            />
+          </div>
 
-{/* Description Field */}
-<div className={styles.inputGroup}>
-  <label>Description</label>
-  <textarea
-    value={description}
-    onChange={(e) => setDescription(e.target.value)}
-    placeholder="Enter video description..."
-    rows={5}
-  />
-</div>
-
+          {/* Description Field */}
+          <div className={styles.inputGroup}>
+            <label>Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter video description..."
+              rows={5}
+            />
+          </div>
 
           {/* Category & Visibility */}
           <div className={styles.doubleRow}>
@@ -231,36 +247,101 @@ const YouTubePost = () => {
 
           {/* Schedule / Draft */}
           <div className={styles.scheduleSection}>
-            <div className={styles.whenToPost}>
-              <label>When to Post</label>
-              <select
-                value={postTime}
-                onChange={(e) => setPostTime(e.target.value)}
-              >
-                <option value="next-available">Next Available</option>
-                <option value="custom">Custom Date & Time</option>
-                <option value="draft">Save as Draft</option>
-              </select>
-            </div>
-            <div className={styles.actionButtons}>
-              <button type="button" className={styles.draftButton}>
-                Save as Draft
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className={styles.scheduleButton}
-              >
-                {loading ? "Uploading..." : "Schedule Post"}
-              </button>
-            </div>
-          </div>
+  <div className={styles.whenToPost}>
+    <label>When to Post</label>
+    <select
+      value={postTime}
+      onChange={(e) => setPostTime(e.target.value)}
+    >
+      <option value="next-available">Next Available</option>
+      <option value="custom">Custom Date & Time</option>
+      <option value="draft">Save as Draft</option>
+    </select>
+  </div>
+  <div className={styles.actionButtons}>
+    {/* Save Draft */}
+    <button type="button" className={styles.draftButton}>
+      Save as Draft
+    </button>
+
+    {/* Preview Button — placed beside Save Draft */}
+    <button
+      type="button"
+      onClick={() => setShowPreview(!showPreview)}
+      className={styles.previewButton}
+    >
+      {showPreview ? "Hide Preview" : "Preview"}
+    </button>
+
+    {/* Schedule / Upload */}
+    <button
+      type="submit"
+      disabled={loading}
+      className={styles.scheduleButton}  
+    >
+      {loading ? "Uploading..." : "Schedule Post"}
+    </button>
+  </div>
+</div>
 
           {/* Messages */}
           {message && <p className={styles.successMessage}>{message}</p>}
           {error && <p className={styles.errorMessage}>{error}</p>}
         </form>
       </div>
+
+      {/* YouTube Short Preview Panel */}
+      {showPreview && (
+        <div className={styles.previewPanel}>
+          <h3>YouTube Short Preview</h3>
+          <div className={styles.shortPreviewContainer}>
+            {previewUrl ? (
+              <div className={styles.shortPreview}>
+                <video
+                  src={previewUrl}
+                  className={styles.previewVideoContent}
+                  muted
+                  loop
+                  playsInline
+                  controls
+                />
+                <div className={styles.previewControls}>
+                  <button className={styles.controlButton}><FaSmile /></button>
+                  <button className={styles.controlButton}><FaTimes /></button>
+                  <button className={styles.controlButton}><FaComment /></button>
+                  <button className={styles.controlButton}><FaShareAlt /></button>
+                </div>
+                <div className={styles.bottomBar}>
+                  <div className={styles.channelInfo}>
+                    <img
+                      src={avatarUrl}
+                      alt="Channel"
+                      className={styles.avatar}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "https://via.placeholder.com/36?text=U";
+                      }}
+                    />
+                    <span>@{username}</span>
+                    <button className={styles.subscribeButton}>Subscribe</button>
+                  </div>
+                  <div className={styles.videoInfo}>
+                    <p>{title || "Untitled Video"}</p>
+                    <p className={styles.descriptionPreview}>
+                      {description?.substring(0, 100)}
+                      {description?.length > 100 ? "..." : ""}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className={styles.placeholderPreview}>
+                <p>No video selected</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

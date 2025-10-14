@@ -8,17 +8,16 @@ const TwitterConnect = () => {
   const handleConnectTwitter = () => {
     setLoading(true);
     try {
-      // ✅ Get both frontend and backend URLs from environment variables
       const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL;
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-
-      // ✅ Construct the final URL dynamically, just like with LinkedIn
+      // Redirect to backend OAuth route with a redirect back to Landing page
       const redirectUri = encodeURIComponent(`${frontendUrl}/Landing?twitter=connected`);
       window.location.href = `${backendUrl}/auth/twitter?redirect=${redirectUri}`;
-
     } catch (error) {
       console.error("Connection error:", error);
-      alert("Unable to connect to Twitter. Please try again later.");
+      alert(
+        "Unable to connect to Twitter. Check your internet or try again later."
+      );
       setLoading(false);
     }
   };
@@ -26,6 +25,7 @@ const TwitterConnect = () => {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
+        {/* Header */}
         <div className={styles.header}>
           <FaTwitter className={styles.twitterIcon} />
           <h1>Connect Your Twitter Account</h1>
@@ -34,6 +34,7 @@ const TwitterConnect = () => {
           </p>
         </div>
 
+        {/* Benefits */}
         <div className={styles.benefits}>
           <div className={styles.benefitItem}>
             <div className={styles.benefitIcon}>🐦</div>
@@ -58,23 +59,30 @@ const TwitterConnect = () => {
           </div>
         </div>
 
+        {/* Trust Section */}
         <div className={styles.trustSection}>
           <p>🔒 Secure connection via Twitter’s official API</p>
           <p>🚫 We never tweet without your approval</p>
         </div>
 
-        <button
-          className={styles.connectButton}
-          onClick={handleConnectTwitter}
-          disabled={loading}
-        >
-          <FaTwitter />
-          {loading ? "Connecting..." : "Connect to Twitter"}
-        </button>
+        {/* Connect Button */}
+        <div className={styles.buttonGroup}>
+          <button
+            className={styles.connectButton}
+            onClick={handleConnectTwitter}
+            disabled={loading}
+          >
+            <FaTwitter />
+            {loading ? "Connecting..." : "Connect to Twitter"}
+          </button>
+      
+        </div>
 
+        {/* Footer */}
         <div className={styles.footerNote}>
           <p>
-            By connecting, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+            By connecting, you agree to our <a href="#">Terms</a> and{" "}
+            <a href="#">Privacy Policy</a>.
           </p>
         </div>
       </div>
