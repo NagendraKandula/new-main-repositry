@@ -41,6 +41,7 @@ const FacebookPostPage = () => {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
+          
         },
       );
       setMessage(response.data.message || 'Successfully posted to Facebook!');
