@@ -1,4 +1,6 @@
+// frontend/pages/Sidebar.tsx
 import React, { useState } from "react";
+import { useRouter } from 'next/router'; // Import useRouter for navigation
 import {
   FaPenNib,
   FaPaste,
@@ -8,24 +10,6 @@ import {
   FaRegLightbulb,
 } from "react-icons/fa";
 import styles from "../styles/sidebar.module.css";
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { cn } from "utils";
-
-const TooltipProvider = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) => {
-  return <TooltipPrimitive.Provider {...props} />;
-};
-
-const Tooltip = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Root>) => {
-  return <TooltipPrimitive.Root {...props} />;
-};
-
-const TooltipTrigger = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) => {
-  return <TooltipPrimitive.Trigger {...props} />;
-};
-
-const TooltipContent = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Content>) => {
-  return <TooltipPrimitive.Content {...props} />;
-};
 
 interface SidebarProps {
   activeSegment: string;
@@ -37,20 +21,21 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, activePlatform, setActivePlatform }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter(); // Initialize the router
 
+  // Added a 'route' property to each segment for navigation
   const segments = [
-    { name: "Create", icon: <FaPenNib /> },
-    { name: "Templates", icon: <FaPaste /> },
-    { name: "Publish", icon: <FaUpload /> },
-    { name: "Planning", icon: <FaRegCalendarAlt /> },
-    { name: "Analytics", icon: <FaChartBar /> },
-    { name: "Summary", icon: <FaRegLightbulb /> },
+    { name: "Create", icon: <FaPenNib />, route: "/Create" },
+    { name: "Templates", icon: <FaPaste />, route: "/Templates" },
+    { name: "Publish", icon: <FaUpload />, route: "/Publish" },
+    { name: "Planning", icon: <FaRegCalendarAlt />, route: "/Planning" },
+    { name: "Analytics", icon: <FaChartBar />, route: "/Analytics" },
+    // This is the new segment for YouTube Analytics
+    { name: "Summary", icon: <FaRegLightbulb />, route: "/Summary" },
   ];
 
-  const handleClick = (name: string) => {
+  const handleClick = (name: string, route: string) => {
     setActiveSegment(name);
-    // Add this line to reset the active platform
-    setActivePlatform(null);
   };
 
   return (
@@ -60,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, acti
           {segments.map((s) => (
             <button
               key={s.name}
-              className={`${styles.segment} ${activeSegment === s.name && !activePlatform ? styles.active : ""}`}
+              className={`${styles.segment} ${activeSegment === s.name ? styles.active : ""}`}
               onClick={() => handleClick(s.name)}
               aria-label={s.name}
             >
