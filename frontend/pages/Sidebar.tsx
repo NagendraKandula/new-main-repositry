@@ -1,6 +1,6 @@
 // frontend/pages/Sidebar.tsx
 import React, { useState } from "react";
-import { useRouter } from 'next/router'; // Import useRouter for navigation
+import { useRouter } from "next/router";
 import {
   FaPenNib,
   FaPaste,
@@ -15,27 +15,30 @@ interface SidebarProps {
   activeSegment: string;
   setActiveSegment: (segment: string) => void;
   activePlatform: string | null;
-  // Add the new prop
   setActivePlatform: (platform: string | null) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, activePlatform, setActivePlatform }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  activeSegment,
+  setActiveSegment,
+  activePlatform,
+  setActivePlatform,
+}) => {
   const [collapsed, setCollapsed] = useState(false);
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
 
-  // Added a 'route' property to each segment for navigation
   const segments = [
     { name: "Create", icon: <FaPenNib />, route: "/Create" },
     { name: "Templates", icon: <FaPaste />, route: "/Templates" },
     { name: "Publish", icon: <FaUpload />, route: "/Publish" },
     { name: "Planning", icon: <FaRegCalendarAlt />, route: "/Planning" },
     { name: "Analytics", icon: <FaChartBar />, route: "/Analytics" },
-    // This is the new segment for YouTube Analytics
     { name: "Summary", icon: <FaRegLightbulb />, route: "/Summary" },
   ];
 
   const handleClick = (name: string, route: string) => {
-    setActiveSegment(name);
+    setActiveSegment(name); // set active segment
+    router.push(route); // navigate to the route
   };
 
   return (
@@ -46,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, acti
             <button
               key={s.name}
               className={`${styles.segment} ${activeSegment === s.name ? styles.active : ""}`}
-              onClick={() => handleClick(s.name)}
+              onClick={() => handleClick(s.name, s.route)}
               aria-label={s.name}
             >
               <span className={styles.segmentIcon}>{s.icon}</span>
@@ -56,14 +59,14 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, acti
         </nav>
       </aside>
 
-      {/* Floating Toggle Button — outside sidebar */}
+      {/* Floating Toggle Button */}
       <button
         className={styles.sidebarToggle}
         onClick={() => setCollapsed(!collapsed)}
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        style={{ left: collapsed ? '60px' : '250px' }}
+        style={{ left: collapsed ? "60px" : "250px" }}
       >
-        {collapsed ? '⟩' : '⟨'}
+        {collapsed ? "⟩" : "⟨"}
       </button>
     </>
   );
