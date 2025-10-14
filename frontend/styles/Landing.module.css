@@ -4,11 +4,12 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  overflow: hidden;
 }
 
 /* Fixed Header */
 .header {
-  /* No need for flex: 0 0 auto here if it's the only direct child of container before main-wrapper */
+  flex: 0 0 auto;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -20,32 +21,23 @@
 .main {
   display: flex;
   flex: 1;
-  /* This is the key change: Allow the content to scroll within the main container */
-  /* Remove overflow: hidden; from .container and add it here or on a content wrapper */
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 /* Fixed Sidebar */
 .sidebar {
   flex: 0 0 260px;
-  height: 100%; /* Will take full height of .main */
+  height: 100%;
   overflow-y: auto;
-  /* The padding-top here is okay, but it doesn't solve the header overlap */
+  padding-top: 20px; /* Optional: space below header */
 }
 
 /* Scrollable Content Area */
 .content {
   flex: 1;
   padding: 40px;
-  /* This is where the scrollbar should appear */
   overflow-y: auto;
   background: #fcfcfd;
-}
-
-/* A helper class to apply a margin-top to the first child of the main content area */
-/* You would apply this class to the content inside your Publish component, for example */
-.firstContentElement {
-  margin-top: 40px; /* Or whatever the height of your header is */
 }
 
 /* Placeholder Content */

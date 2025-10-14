@@ -16,30 +16,22 @@ import YouTubePost from "./YouTubePost";
 import InstagramConnect from "./InstagramConnect";
 import FacebookConnect from "./FacebookConnect";
 import TwitterConnect from "./TwitterConnect";
-import TwitterPost from "./TwitterPost";
 import LinkedInConnect from "./LinkedInConnect";
 import PinterestConnect from "./PinterestConnect";
 import ThreadsConnect from "./ThreadsConnect";
-import FacebookPost from "./facebook-post";
 
 const Landing = () => {
   const router = useRouter();
   const [activeSegment, setActiveSegment] = useState("Create");
   const [activePlatform, setActivePlatform] = useState<string | null>(null);
   const [youtubeConnected, setYoutubeConnected] = useState(false);
-  const [twitterConnected, setTwitterConnected] = useState(false);
 
-  // Check URL query for YouTube or Twitter connection
+  // Check URL query for YouTube connection
   useEffect(() => {
     if (router.query.youtube === "connected") {
       setActivePlatform("youtube");
       setYoutubeConnected(true);
-      router.replace("/Landing", undefined, { shallow: true });
-    }
-
-    if (router.query.twitter === "connected") {
-      setActivePlatform("twitter");
-      setTwitterConnected(true);
+      // Optional: remove query param after reading
       router.replace("/Landing", undefined, { shallow: true });
     }
   }, [router.query]);
@@ -49,14 +41,12 @@ const Landing = () => {
       switch (activePlatform) {
         case "youtube":
           return youtubeConnected ? <YouTubePost /> : <YouTubeConnect />;
-        case "twitter":
-          return twitterConnected ? <TwitterPost /> : <TwitterConnect />;
         case "instagram":
-          // Assuming you have a way to check if Instagram is connected
-          // For now, let's assume it's always the connect page
           return <InstagramConnect />;
         case "facebook":
           return <FacebookConnect />;
+        case "twitter":
+          return <TwitterConnect />;
         case "linkedin":
           return <LinkedInConnect />;
         case "pinterest":
@@ -97,7 +87,6 @@ const Landing = () => {
           activeSegment={activeSegment}
           setActiveSegment={setActiveSegment}
           activePlatform={activePlatform}
-          setActivePlatform={setActivePlatform} // <-- Pass the setActivePlatform function here
         />
         <main className={styles.content}>{renderContent()}</main>
       </div>

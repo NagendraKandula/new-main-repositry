@@ -10,34 +10,15 @@ import {
   FaRegLightbulb,
 } from "react-icons/fa";
 import styles from "../styles/sidebar.module.css";
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { cn } from "utils";
-
-const TooltipProvider = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) => {
-  return <TooltipPrimitive.Provider {...props} />;
-};
-
-const Tooltip = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Root>) => {
-  return <TooltipPrimitive.Root {...props} />;
-};
-
-const TooltipTrigger = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) => {
-  return <TooltipPrimitive.Trigger {...props} />;
-};
-
-const TooltipContent = ({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Content>) => {
-  return <TooltipPrimitive.Content {...props} />;
-};
+import Link from "next/link";
 
 interface SidebarProps {
   activeSegment: string;
   setActiveSegment: (segment: string) => void;
   activePlatform: string | null;
-  // Add the new prop
-  setActivePlatform: (platform: string | null) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, activePlatform, setActivePlatform }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, activePlatform }) => {
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter(); // Initialize the router
 
@@ -54,8 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, acti
 
   const handleClick = (name: string, route: string) => {
     setActiveSegment(name);
-    // Add this line to reset the active platform
-    setActivePlatform(null);
+    router.push(route); // Navigate to the page when a button is clicked
   };
 
   return (
@@ -65,8 +45,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSegment, setActiveSegment, acti
           {segments.map((s) => (
             <button
               key={s.name}
-              className={`${styles.segment} ${activeSegment === s.name && !activePlatform ? styles.active : ""}`}
-              onClick={() => handleClick(s.name)}
+              className={`${styles.segment} ${activeSegment === s.name ? styles.active : ""}`}
+              onClick={() => handleClick(s.name, s.route)}
               aria-label={s.name}
             >
               <span className={styles.segmentIcon}>{s.icon}</span>
