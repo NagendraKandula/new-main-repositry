@@ -1,4 +1,3 @@
-// frontend/pages/TwitterPost.tsx
 import React, { useState } from "react";
 import styles from "../styles/TwitterPost.module.css";
 import {
@@ -16,6 +15,19 @@ import apiClient from "../lib/axios";
 import { withAuth } from "../utils/withAuth";
 import { GetServerSideProps } from "next";
 
+// --- NEW: Helper function to convert a File to a Base64 string ---
+const toBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      // The result includes a prefix like "data:image/jpeg;base64,", we only need the part after the comma.
+      const base64String = (reader.result as string).split(",")[1];
+      resolve(base64String);
+    };
+    reader.onerror = (error) => reject(error);
+  });
+
 const TwitterPost = () => {
   const [tweetContent, setTweetContent] = useState("");
   const [mediaFile, setMediaFile] = useState<File | null>(null);
@@ -27,10 +39,10 @@ const TwitterPost = () => {
   const [showPreview, setShowPreview] = useState(false);
 
   // Placeholder user info for preview
-  const username = "bantubillisiva";
-  const avatarUrl = "/Limg.png"; // Ensure this exists in public/
+  const username = "your_username"; // You can fetch this from props or a context
+  const avatarUrl = "/Limg.png";
 
-  // Handle media selection
+  // Handle media selection (no changes here)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
@@ -59,6 +71,7 @@ const TwitterPost = () => {
     setPreviewUrl(null);
   };
 
+  // --- UPDATED: handleSubmit function to send JSON instead of FormData ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!tweetContent && !mediaFile) {
@@ -70,17 +83,37 @@ const TwitterPost = () => {
     setMessage("");
     setError("");
 
-    const formData = new FormData();
-    formData.append("tweet", tweetContent);
-    if (mediaFile) formData.append("media", mediaFile);
-    formData.append("schedule", postTime);
-
     try {
-      const response = await apiClient.post("/twitter/post-tweet", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      // 1. Prepare the JSON payload
+      let mediaPayload = undefined;
+      if (mediaFile) {
+        const b64 = await toBase64(mediaFile);
+        mediaPayload = [
+          {
+            filename: mediaFile.name,
+            type: mediaFile.type,
+            b64: b64,
+          },
+        ];
+      }
+
+      const payload = {
+        text: tweetContent,
+        media: mediaPayload,
+      };
+
+      // 2. Send the request with the correct endpoint and data format
+      const response = await apiClient.post("/api/auth/twitter/post", payload, {
+        headers: { "Content-Type": "application/json" }, // Send as JSON
         withCredentials: true,
       });
+
       setMessage(response.data.message || "Tweet posted successfully!");
+      // Clear the form on success
+      setTweetContent("");
+      setMediaFile(null);
+      setPreviewUrl(null);
+
     } catch (err: any) {
       setError(err.response?.data?.message || "Posting failed. Please try again.");
     } finally {

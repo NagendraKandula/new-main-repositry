@@ -132,5 +132,37 @@ async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
     // You can create a new service method for this or reuse the googleLogin logic
     return this.authService.facebookLogin(req, res);
   }
+    @Get('twitter')
+  @UseGuards(AuthGuard('twitter'))
+  async twitterAuth() {
+    // This guard will automatically redirect to Twitter for authentication
+  }
 
+  @Get('twitter/callback')
+  @UseGuards(AuthGuard('twitter'))
+  twitterAuthRedirect(@Req() req, @Res() res: Response) {
+    // The AuthService will handle setting the cookies and redirecting
+    return this.authService.twitterLogin(req, res);
+  }
+   @Post('twitter/post')
+  async postTweet(@Req() req, @Body() body: { text: string; media?: Array<{ filename: string; type: string; b64: string }> }) {
+    const { text, media } = body;
+    const { twitter_oauth_token, twitter_oauth_token_secret } = req.cookies;
+
+    if (!text && (!media || media.length === 0)) {
+        throw new BadRequestException('Tweet must contain text or media.');
+    }
+
+    if (!twitter_oauth_token || !twitter_oauth_token_secret) {
+        throw new BadRequestException('Twitter authentication required. Please connect your account.');
+    }
+
+    try {
+      const result = await this.authService.postTweet(text, media, twitter_oauth_token, twitter_oauth_token_secret);
+      return { message: 'Tweet posted successfully!', data: result };
+    } catch (err: any) {
+        console.error('Error in postTweet controller:', err);
+        throw new BadRequestException(err.message || 'Failed to post tweet.');
+    }
+  }
 }

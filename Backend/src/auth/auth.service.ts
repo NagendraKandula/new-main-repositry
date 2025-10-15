@@ -12,6 +12,7 @@ import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import { TwitterApi } from 'twitter-api-v2';
 @Injectable()
 export class AuthService {
   constructor(
@@ -330,4 +331,51 @@ export class AuthService {
     const frontendUrl = this.config.get<string>('FRONTEND_URL');
     return res.redirect(`${frontendUrl}/Landing?youtube=connected`);
   }
+async twitterLogin(req, res: Response) {
+    if (!req.user) {
+      throw new BadRequestException('No user from Twitter');
+    }
+    const { oauthToken, oauthSecret, username } = req.user;
+
+    // Set the OAuth 1.0a tokens in secure, httpOnly cookies
+    res.cookie('twitter_oauth_token', oauthToken, { httpOnly: true, secure: process.env.NODE_ENV !== 'development', sameSite: 'none' });
+    res.cookie('twitter_oauth_token_secret', oauthSecret, { httpOnly: true, secure: process.env.NODE_ENV !== 'development', sameSite: 'none' });
+
+    const frontendUrl = this.config.get<string>('FRONTEND_URL');
+    return res.redirect(`${frontendUrl}/Landing?twitter=connected&username=${encodeURIComponent(username)}`);
+  }
+
+  // --- UNIFIED POST TWEET METHOD ---
+  async postTweet(text: string, media: Array<{ filename: string; type: string; b64: string }> | undefined, oauthToken: string, oauthSecret: string) {
+    try {
+      const client = new TwitterApi({
+        appKey: this.config.get<string>('TWITTER_API_KEY')!,
+        appSecret: this.config.get<string>('TWITTER_API_SECRET')!,
+        accessToken: oauthToken,
+        accessSecret: oauthSecret,
+      });
+
+      // Handle media upload if media is present
+      if (media && media.length > 0) {
+        const mediaIds = await Promise.all(
+          media.map(async (m) => {
+            const buffer = Buffer.from(m.b64, 'base64');
+            return client.v1.uploadMedia(buffer, { mimeType: m.type });
+          }),
+        );
+        // Post tweet with media
+        const { data } = await client.v2.tweet(text, { media: { media_ids: mediaIds as any } });
+        return data;
+      } else {
+        // Post a text-only tweet
+        const { data } = await client.v2.tweet(text);
+        return data;
+      }
+    } catch (error) {
+      console.error('Error posting tweet:', error);
+      throw new BadRequestException('Failed to post tweet.');
+    }
+  }
+
+
 }

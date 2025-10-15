@@ -13,7 +13,7 @@ import { FacebookStrategy } from './facebook.strategy';// <-- Import YoutubeStra
 import { LinkedinStrategy } from './linkedin.strategy';
 import { HttpModule } from '@nestjs/axios';
 import { JwtRefreshTokenStrategy } from './jwt-refresh.strategy';
-
+import { TwitterStrategy } from './twitter.strategy';
 @Module({
   imports: [
     PrismaModule,
@@ -28,7 +28,7 @@ import { JwtRefreshTokenStrategy } from './jwt-refresh.strategy';
     }),
   ],
   controllers: [AuthController, LinkedinStrategy],
-  providers: [AuthService, JwtStrategy, GoogleStrategy,YoutubeStrategy,FacebookStrategy,JwtRefreshTokenStrategy], // <-- Add GoogleStrategy
+  providers: [AuthService, JwtStrategy, GoogleStrategy,YoutubeStrategy,FacebookStrategy,JwtRefreshTokenStrategy,TwitterStrategy], // <-- Add GoogleStrategy
   exports: [AuthService, JwtModule], 
 })
 export class AuthModule {}
