@@ -53,7 +53,7 @@ export class YoutubeService {
             description,
           },
           status: {
-            privacyStatus: 'private',
+            privacyStatus: 'public',
           },
         },
         media: {

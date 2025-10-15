@@ -8,17 +8,18 @@ import { PrismaModule } from './prisma/prisma.module';
 import { YoutubeModule } from './auth/youtube/youtube.module';
 import { FacebookModule } from './facebook/facebook.module';
 import { YoutubeAnalyticsModule } from './youtube-analytics/youtube-analytics.module';
-
+import { AiAssistantModule } from './ai-assistant/ai-assistant.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // ✅ Makes config available across all modules without re-importing
+      isGlobal: true, // Makes the ConfigModule available globally
     }),
     PrismaModule,
     AuthModule,
     YoutubeModule,
     FacebookModule,
     YoutubeAnalyticsModule,
+     AiAssistantModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, PrismaService],
