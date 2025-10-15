@@ -1,7 +1,7 @@
-import { Controller, Get, UseGuards, Req, Query } from '@nestjs/common';
+import { Controller, Get, UseGuards, Req, Query,BadRequestException } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { YoutubeAnalyticsService } from './youtube-analytics.service';
-import { range } from 'rxjs';
+
 
 @Controller('youtube-analytics')
 export class YoutubeAnalyticsController {
@@ -18,4 +18,6 @@ export class YoutubeAnalyticsController {
     const userId = req.user.userId;
     return this.analyticsService.getChannelAnalytics(userId,range,year,month);
   }
+
+// Add this new method to your YoutubeController class
 }

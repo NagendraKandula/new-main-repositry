@@ -22,6 +22,8 @@ export interface ContentEditorProps {
   onPublish: () => void;
   onSaveDraft: () => void;
   onSchedule: () => void;
+  aiAssistantEnabled: boolean;
+  setAiAssistantEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function ContentEditor({
@@ -32,8 +34,12 @@ export default function ContentEditor({
   onPublish,
   onSaveDraft,
   onSchedule,
+  aiAssistantEnabled, // This prop will now be used
+  setAiAssistantEnabled, // This prop will now be used
 }: ContentEditorProps) {
-  const [aiEnabled, setAiEnabled] = useState(false);
+  // ❌ MISTAKE: This internal state was overriding the parent's state. It has been removed.
+  // const [aiEnabled, setAiEnabled] = useState(false);
+
   const [isDragging, setIsDragging] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
@@ -138,8 +144,10 @@ export default function ContentEditor({
           <label className={styles.switch}>
             <input
               type="checkbox"
-              checked={aiEnabled}
-              onChange={() => setAiEnabled(!aiEnabled)}
+              // ✅ FIX: Use the prop from the parent component
+              checked={aiAssistantEnabled}
+              // ✅ FIX: Call the state updater function from the parent
+              onChange={() => setAiAssistantEnabled(!aiAssistantEnabled)}
             />
             <span className={styles.slider}></span>
           </label>

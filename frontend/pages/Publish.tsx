@@ -4,6 +4,7 @@ import styles from '../styles/Publish.module.css';
 import ChannelSelector, { Channel } from '../components/ChannelSelector'; // ✅ Import Channel type
 import ContentEditor from '../components/ContentEditor';
 import DynamicPreview from '../components/DynamicPreview';
+import AIAssistant from '../components/AIAssistant'; // Import the AI Assistant component
 
 export default function Publish() {
   // ✅ State for content and files
@@ -12,6 +13,9 @@ export default function Publish() {
 
   // ✅ State for selected channels — MUST be a Set<Channel>
   const [selectedChannels, setSelectedChannels] = useState<Set<Channel>>(new Set());
+  
+  // State to control the visibility of the AI Assistant
+  const [aiAssistantEnabled, setAiAssistantEnabled] = useState(false);
 
   // ✅ Action handlers
   const handlePublish = () => {
@@ -39,8 +43,11 @@ export default function Publish() {
         <h1 className={styles.title}>Create and publish</h1>
       </div>
 
-      {/* Left panel: ChannelSelector + ContentEditor */}
       <div className={styles.editorPreviewContainer}>
+        {/* Conditionally render the AI Assistant on the left */}
+        {aiAssistantEnabled && <AIAssistant />}
+
+        {/* Left panel: ChannelSelector + ContentEditor */}
         <div className={styles.leftPanel}>
           {/* ✅ Pass selectedChannels and onSelectionChange */}
           <ChannelSelector
@@ -55,6 +62,9 @@ export default function Publish() {
             onPublish={handlePublish}
             onSaveDraft={handleSaveDraft}
             onSchedule={handleSchedule}
+            // Pass state and setter for the AI Assistant toggle
+            aiAssistantEnabled={aiAssistantEnabled}
+            setAiAssistantEnabled={setAiAssistantEnabled}
           />
         </div>
 
